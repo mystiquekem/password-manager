@@ -4,13 +4,13 @@ from cryptography.hazmat.primitives import hashes, hmac, padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from src.core.config import KDF_ITERATIONS
 
-def derive_keys(password: str, salt: bytes):
+def derive_keys(password: str, salt: bytes, iterations: int = KDF_ITERATIONS):
     """[Session 8] Key Derivation & Stretching"""
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
         length=32, # 16 for AES + 16 for HMAC
         salt=salt,
-        iterations=KDF_ITERATIONS,
+        iterations=iterations,
     )
     full_key = kdf.derive(password.encode())
     # [Pipeline Stage 2] Tách Khóa: 16b AES Key + 16b HMAC Key

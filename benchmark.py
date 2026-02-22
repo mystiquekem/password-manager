@@ -10,14 +10,10 @@ def benchmark_kdf(iterations_list, password="master_password", salt=b"fixed_salt
     print("-" * 30)
     
     for i in iterations_list:
-        # Override global constant locally for benchmark
-        from src.core import config
-        config.KDF_ITERATIONS = i
-        
         start_time = time.perf_counter()
         
-        # 1. Derive Keys
-        aes_key, hmac_key = derive_keys(password, salt)
+        # 1. Derive Keys with explicit iteration count
+        aes_key, hmac_key = derive_keys(password, salt, iterations=i)
         
         # 2. Encrypt & Authenticate
         data = {"test": "data" * 10}

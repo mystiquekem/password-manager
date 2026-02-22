@@ -1,9 +1,10 @@
 import tkinter as tk
-from tkinter import messagebox, simpledialog, filedialog
+from tkinter import messagebox, simpledialog, filedialog, ttk
 import json, os, sys, base64, shutil
-from cryptography.fernet import Fernet, InvalidToken
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives import hashes, hmac, padding
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+import secrets
 
 # ================= CONFIG =================
 VAULT_DIR = "vaults"
@@ -13,250 +14,249 @@ MAX_ATTEMPTS = 5
 os.makedirs(VAULT_DIR, exist_ok=True)
 os.makedirs(BACKUP_DIR, exist_ok=True)
 
-failed_attempts = 0
-lock_mode = False
-backup_done = False
+# ================= CRYPTO LOGIC (Explicit Implementation) =================
+class VaultManager:
+    def __init__(self, name):
+        self.name = name
+        self.path = os.path.join(VAULT_DIR, f"{name}.enc")
+        self.data = {}
+        self.aes_key = None
+        self.hmac_key = None
 
-current_vault_name = None
-current_data = {}
-current_fernet = None
+    @staticmethod
+    def derive_keys(password: str, salt: bytes):
+        """[Session 8] Key Derivation & Stretching"""
+        kdf = PBKDF2HMAC(
+            algorithm=hashes.SHA256(),
+            length=32, # 16 for AES + 16 for HMAC
+            salt=salt,
+            iterations=390000,
+        )
+        full_key = kdf.derive(password.encode())
+        # [Pipeline Stage 2] Tách Khóa: 16b AES Key + 16b HMAC Key
+        return full_key[:16], full_key[16:]
 
-# ================= CRYPTO =================
-def derive_key(password: str, salt: bytes) -> Fernet:
-    kdf = PBKDF2HMAC(
-        algorithm=hashes.SHA256(),
-        length=32,
-        salt=salt,
-        iterations=390000,
-    )
-    key = base64.urlsafe_b64encode(kdf.derive(password.encode()))
-    return Fernet(key)
+    def create(self, password):
+        """[Session 7] CSPRNG Salt & Key Generation"""
+        salt = secrets.token_bytes(16)
+        self.aes_key, self.hmac_key = self.derive_keys(password, salt)
+        self.data = {}
+        self.save(salt)
 
-def encrypt_data(data: dict, fernet: Fernet) -> bytes:
-    return fernet.encrypt(json.dumps(data).encode())
+    def unlock(self, password):
+        """[Session 4 & 8] Explicit Authentication & Decryption"""
+        if not os.path.exists(self.path):
+            raise FileNotFoundError("Vault file not found.")
+        
+        with open(self.path, "rb") as f:
+            salt = f.read(16)
+            iv = f.read(16)
+            stored_mac = f.read(32) # HMAC-SHA256 tag
+            ciphertext = f.read()
+        
+        # 1. Derive Keys
+        self.aes_key, self.hmac_key = self.derive_keys(password, salt)
 
-def decrypt_data(blob: bytes, fernet: Fernet) -> dict:
-    return json.loads(fernet.decrypt(blob).decode())
+        # 2. [Session 8] Integrity Check: Verify HMAC
+        h = hmac.HMAC(self.hmac_key, hashes.SHA256())
+        h.update(ciphertext)
+        try:
+            h.verify(stored_mac)
+        except Exception:
+            raise ValueError("Integrity check failed (MAC mismatch).")
 
-# ================= VAULT FILE =================
-def vault_path(name):
-    return os.path.join(VAULT_DIR, f"{name}.enc")
+        # 3. [Session 4] Decryption: AES-128-CBC
+        cipher = Cipher(algorithms.AES(self.aes_key), modes.CBC(iv))
+        decryptor = cipher.decryptor()
+        padded_data = decryptor.update(ciphertext) + decryptor.finalize()
 
-def backup_path(name):
-    return os.path.join(BACKUP_DIR, f"{name}_backup.enc")
+        # 4. [Session 4] Remove PKCS7 Padding
+        unpadder = padding.PKCS7(128).unpadder()
+        plaintext = unpadder.update(padded_data) + unpadder.finalize()
+        
+        self.data = json.loads(plaintext.decode())
+        return True
 
-# ================= LOCK MODE =================
-def enter_lock_mode():
-    global lock_mode
-    lock_mode = True
-    show_lock_screen()
+    def save(self, salt=None):
+        """[Session 4 & 8] Explicit Encryption & Packaging"""
+        if not self.aes_key: return
 
-def do_backup_and_exit():
-    global backup_done
-    if backup_done or not current_vault_name:
-        sys.exit()
+        # Read salt if not provided (for updates)
+        if salt is None:
+            with open(self.path, "rb") as f:
+                salt = f.read(16)
 
-    src = vault_path(current_vault_name)
-    if os.path.exists(src):
-        shutil.copy(src, backup_path(current_vault_name))
+        # 1. [Session 4] Add PKCS7 Padding
+        padder = padding.PKCS7(128).padder()
+        padded_data = padder.update(json.dumps(self.data).encode()) + padder.finalize()
 
-    backup_done = True
-    messagebox.showinfo("Backup", "Vault backed up.\nApplication will exit.")
-    sys.exit()
+        # 2. [Session 4] Encryption: AES-128-CBC with Random IV
+        iv = secrets.token_bytes(16)
+        cipher = Cipher(algorithms.AES(self.aes_key), modes.CBC(iv))
+        encryptor = cipher.encryptor()
+        ciphertext = encryptor.update(padded_data) + encryptor.finalize()
 
-# ================= UI CORE =================
-root = tk.Tk()
-root.title("Password Manager (Cryptography Demo)")
-root.geometry("820x520")
+        # 3. [Session 8] Tính toán HMAC-SHA256 (Encrypt-then-MAC)
+        h = hmac.HMAC(self.hmac_key, hashes.SHA256())
+        h.update(ciphertext)
+        mac_tag = h.finalize()
 
-main_frame = None
+        # 4. Packaging: [Salt] + [IV] + [MAC] + [Ciphertext]
+        with open(self.path, "wb") as f:
+            f.write(salt)
+            f.write(iv)
+            f.write(mac_tag)
+            f.write(ciphertext)
 
-def clear_screen():
-    global main_frame
-    if main_frame:
-        main_frame.destroy()
-    main_frame = tk.Frame(root)
-    main_frame.pack(fill="both", expand=True)
+    def add_entry(self, service, username, password):
+        self.data[service] = {"username": username, "password": password}
+        self.save()
 
-# ================= SCREENS =================
-def show_select_vault():
-    clear_screen()
+# ================= UI LAYER =================
+class PasswordApp(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Secure Vault Manager")
+        self.geometry("820x520")
+        self.style = ttk.Style(self)
+        self.style.theme_use('clam')
+        
+        self.manager = None
+        self.failed_attempts = 0
+        self.main_frame = None
+        
+        self.show_select_vault()
 
-    tk.Label(main_frame, text="Select Vault", font=("Arial", 18)).pack(pady=20)
+    def clear_screen(self):
+        if self.main_frame:
+            self.main_frame.destroy()
+        self.main_frame = ttk.Frame(self, padding="20")
+        self.main_frame.pack(fill="both", expand=True)
 
-    def create_vault():
-        name = simpledialog.askstring("Vault Name", "Enter new vault name:")
-        if not name:
-            return
-        global current_vault_name
-        current_vault_name = name
-        show_unlock_screen(new=True)
+    def show_select_vault(self):
+        self.clear_screen()
+        ttk.Label(self.main_frame, text="Password Vaults", font=("Arial", 24, "bold")).pack(pady=30)
+        
+        btn_frame = ttk.Frame(self.main_frame)
+        btn_frame.pack(pady=10)
 
-    def open_vault():
-        clear_screen()
+        ttk.Button(btn_frame, text="Create New Vault", width=30, command=self.create_vault_dialog).pack(pady=5)
+        ttk.Button(btn_frame, text="Open Existing Vault", width=30, command=self.show_open_vault).pack(pady=5)
+        ttk.Button(btn_frame, text="Restore Backup", width=30, command=self.restore_backup).pack(pady=5)
 
-        tk.Label(main_frame, text="Select Vault to Open", font=("Arial", 16)).pack(pady=20)
+    def create_vault_dialog(self):
+        name = simpledialog.askstring("New Vault", "Enter vault name:")
+        if name:
+            self.manager = VaultManager(name)
+            self.show_unlock_screen(new=True)
+
+    def show_open_vault(self):
+        self.clear_screen()
+        ttk.Label(self.main_frame, text="Select Vault to Open", font=("Arial", 18)).pack(pady=20)
 
         files = [f[:-4] for f in os.listdir(VAULT_DIR) if f.endswith(".enc")]
-
         if not files:
-            tk.Label(main_frame, text="No vaults found.").pack()
-            tk.Button(main_frame, text="Return", command=show_select_vault).pack(pady=10)
+            ttk.Label(self.main_frame, text="No vaults found.").pack()
+            ttk.Button(self.main_frame, text="Back", command=self.show_select_vault).pack(pady=10)
             return
 
-        listbox = tk.Listbox(main_frame, width=40, height=10)
+        listbox = tk.Listbox(self.main_frame, width=50, height=10, font=("Arial", 10))
         listbox.pack(pady=10)
-
         for v in files:
             listbox.insert(tk.END, v)
 
         def confirm():
-            if not listbox.curselection():
-                return
-            global current_vault_name
-            current_vault_name = listbox.get(listbox.curselection())
-            show_unlock_screen(new=False)
+            if listbox.curselection():
+                name = listbox.get(listbox.curselection())
+                self.manager = VaultManager(name)
+                self.show_unlock_screen(new=False)
 
-        tk.Button(main_frame, text="Open", width=20, command=confirm).pack(pady=8)
-        tk.Button(main_frame, text="Return", width=20, command=show_select_vault).pack()
+        ttk.Button(self.main_frame, text="Unlock Selected", width=20, command=confirm).pack(pady=10)
+        ttk.Button(self.main_frame, text="Back", width=20, command=self.show_select_vault).pack()
 
-    def restore_backup():
-        file = filedialog.askopenfilename(initialdir=BACKUP_DIR)
-        if not file:
-            return
-        name = os.path.basename(file).replace("_backup.enc", "")
-        shutil.copy(file, vault_path(name))
-        messagebox.showinfo("Restored", f"Backup restored as vault '{name}'")
+    def show_unlock_screen(self, new=False):
+        self.clear_screen()
+        ttk.Label(self.main_frame, text=f"Vault: {self.manager.name}", font=("Arial", 18)).pack(pady=20)
+        ttk.Label(self.main_frame, text="Enter Master Password:").pack()
 
-    tk.Button(main_frame, text="Create Vault", width=30, command=create_vault).pack(pady=8)
-    tk.Button(main_frame, text="Open Vault", width=30, command=open_vault).pack(pady=8)
-    tk.Button(main_frame, text="Restore Backup", width=30, command=restore_backup).pack(pady=8)
-    tk.Label(
-    main_frame,
-    text="Note: any empty vault will not be stored even if created.",
-    font=("Arial", 9, "italic"),
-    fg="gray"
-).pack(pady=15)
+        pwd_entry = ttk.Entry(self.main_frame, show="*", width=40)
+        pwd_entry.pack(pady=10)
+        pwd_entry.focus()
 
-# ---------------- UNLOCK ----------------
-def show_unlock_screen(new=False):
-    clear_screen()
+        def attempt_unlock():
+            pwd = pwd_entry.get()
+            try:
+                if new:
+                    self.manager.create(pwd)
+                else:
+                    self.manager.unlock(pwd)
+                self.failed_attempts = 0
+                self.show_entries()
+            except Exception as e:
+                self.failed_attempts += 1
+                messagebox.showerror("Error", f"Unlock Failed: {str(e)}")
+                if self.failed_attempts >= MAX_ATTEMPTS:
+                    messagebox.showwarning("Lockout", "Too many failed attempts. Closing.")
+                    self.quit()
 
-    tk.Label(main_frame, text=f"Unlock Vault: {current_vault_name}", font=("Arial", 16)).pack(pady=20)
-    tk.Label(main_frame, text="Enter Master Password").pack()
+        ttk.Button(self.main_frame, text="Go", width=20, command=attempt_unlock).pack(pady=20)
+        ttk.Button(self.main_frame, text="Cancel", width=20, command=self.show_select_vault).pack()
 
-    pwd_entry = tk.Entry(main_frame, show="*", width=30)
-    pwd_entry.pack(pady=10)
+    def show_entries(self):
+        self.clear_screen()
+        ttk.Label(self.main_frame, text=f"Vault: {self.manager.name}", font=("Arial", 16, "bold")).pack(pady=10)
 
-    hint = tk.Label(main_frame, text="(Password is never stored)", font=("Arial", 9, "italic"))
-    hint.pack()
+        listbox = tk.Listbox(self.main_frame, width=70, height=12, font=("Arial", 10))
+        listbox.pack(pady=10)
+        for service in self.manager.data:
+            listbox.insert(tk.END, service)
 
-    def unlock():
-        global failed_attempts, current_data, current_fernet
+        ctrl_frame = ttk.Frame(self.main_frame)
+        ctrl_frame.pack(pady=10)
 
-        password = pwd_entry.get()
-        salt = current_vault_name.encode()
+        ttk.Button(ctrl_frame, text="Add Entry", command=self.add_entry_dialog).grid(row=0, column=0, padx=5)
+        ttk.Button(ctrl_frame, text="View Entry", command=lambda: self.view_entry(listbox)).grid(row=0, column=1, padx=5)
+        ttk.Button(ctrl_frame, text="Lock", command=self.show_select_vault).grid(row=0, column=2, padx=5)
 
-        try:
-            fernet = derive_key(password, salt)
-            if new:
-                current_data = {}
-            else:
-                with open(vault_path(current_vault_name), "rb") as f:
-                    blob = f.read()
-                current_data = decrypt_data(blob, fernet)
-
-            current_fernet = fernet
-            failed_attempts = 0
-            show_vault_screen()
-
-        except (InvalidToken, FileNotFoundError):
-            failed_attempts += 1
-            messagebox.showerror("Error", "Wrong master password")
-
-            if failed_attempts >= MAX_ATTEMPTS:
-                enter_lock_mode()
-
-    tk.Button(main_frame, text="Unlock", command=unlock).pack(pady=15)
-    tk.Button(main_frame, text="Return", command=show_select_vault).pack()
-
-# ---------------- LOCK ----------------
-def show_lock_screen():
-    clear_screen()
-
-    tk.Label(main_frame, text="LOCK MODE", fg="red", font=("Arial", 18)).pack(pady=30)
-    tk.Label(main_frame, text="Too many failed attempts.").pack(pady=10)
-
-    tk.Button(main_frame, text="Backup Vault", width=25, command=do_backup_and_exit).pack(pady=10)
-    tk.Button(main_frame, text="Exit", width=25, command=sys.exit).pack()
-
-# ---------------- VAULT ----------------
-def show_vault_screen():
-    clear_screen()
-
-    tk.Label(main_frame, text=f"Vault: {current_vault_name}", font=("Arial", 16)).pack(pady=10)
-
-    listbox = tk.Listbox(main_frame, width=60, height=15)
-    listbox.pack(pady=10)
-
-    for k in current_data:
-        listbox.insert(tk.END, k)
-
-    def save_vault():
-        blob = encrypt_data(current_data, current_fernet)
-        with open(vault_path(current_vault_name), "wb") as f:
-            f.write(blob)
-
-    def add_entry():
-        clear_screen()
-
-        tk.Label(main_frame, text="Add Password Entry", font=("Arial", 16)).pack(pady=15)
-
-        tk.Label(main_frame, text="Service").pack()
-        service = tk.Entry(main_frame, width=40)
-        service.pack()
-
-        tk.Label(main_frame, text="Username").pack()
-        username = tk.Entry(main_frame, width=40)
-        username.pack()
-
-        tk.Label(main_frame, text="Password").pack()
-        password = tk.Entry(main_frame, width=40, show="*")
-        password.pack()
+    def add_entry_dialog(self):
+        self.clear_screen()
+        ttk.Label(self.main_frame, text="Add New Password", font=("Arial", 18)).pack(pady=20)
+        
+        fields = {}
+        for label in ["Service", "Username", "Password"]:
+            ttk.Label(self.main_frame, text=f"{label}:").pack()
+            entry = ttk.Entry(self.main_frame, width=40, show="*" if label=="Password" else "")
+            entry.pack(pady=5)
+            fields[label] = entry
 
         def save():
-            if not service.get():
-                return
-            current_data[service.get()] = {
-                "username": username.get(),
-                "password": password.get()
-            }
-            save_vault()
-            show_vault_screen()
+            s, u, p = fields["Service"].get(), fields["Username"].get(), fields["Password"].get()
+            if s and u and p:
+                self.manager.add_entry(s, u, p)
+                self.show_entries()
 
-        tk.Button(main_frame, text="Save", command=save).pack(pady=10)
-        tk.Button(main_frame, text="Return", command=show_vault_screen).pack()
+        ttk.Button(self.main_frame, text="Save", width=20, command=save).pack(pady=10)
+        ttk.Button(self.main_frame, text="Cancel", width=20, command=self.show_entries).pack()
 
-    def view_entry():
-        if not listbox.curselection():
-            return
-        key = listbox.get(listbox.curselection())
+    def view_entry(self, listbox):
+        if not listbox.curselection(): return
+        service = listbox.get(listbox.curselection())
+        entry = self.manager.data[service]
+        messagebox.showinfo(service, f"User: {entry['username']}\nPass: {entry['password']}")
 
-        clear_screen()
-        tk.Label(main_frame, text=key, font=("Arial", 16)).pack(pady=10)
+    def restore_backup(self):
+        file = filedialog.askopenfilename(initialdir=BACKUP_DIR)
+        if file:
+            name = os.path.basename(file).replace("_backup.enc", "")
+            shutil.copy(file, os.path.join(VAULT_DIR, f"{name}.enc"))
+            messagebox.showinfo("Success", f"Restored vault '{name}'")
 
-        tk.Label(main_frame, text=f"Username: {current_data[key]['username']}").pack(pady=5)
-        tk.Label(main_frame, text=f"Password: {current_data[key]['password']}").pack(pady=5)
+    def quit(self):
+        # Auto-backup on exit if a vault is open
+        if self.manager and os.path.exists(self.manager.path):
+            shutil.copy(self.manager.path, os.path.join(BACKUP_DIR, f"{self.manager.name}_backup.enc"))
+        super().quit()
 
-        tk.Button(main_frame, text="Return", command=show_vault_screen).pack(pady=20)
-
-    btns = tk.Frame(main_frame)
-    btns.pack()
-
-    tk.Button(btns, text="Add Password", width=18, command=add_entry).grid(row=0, column=0, padx=5)
-    tk.Button(btns, text="View", width=18, command=view_entry).grid(row=0, column=1, padx=5)
-    tk.Button(btns, text="Lock Vault", width=18, command=show_select_vault).grid(row=0, column=2, padx=5)
-
-# ================= START =================
-show_select_vault()
-root.mainloop()
+if __name__ == "__main__":
+    app = PasswordApp()
+    app.mainloop()

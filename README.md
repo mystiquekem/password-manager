@@ -18,9 +18,14 @@ password-manager/
 │   │   └── vault_manager.py  <-- [LOGIC] Quản lý lưu trữ file và dữ liệu JSON
 │   └── ui/
 │       └── app_window.py     <-- [GIAO DIỆN] Sử dụng Tkinter/TTK
+├── scripts/
+│   ├── benchmark.py          <-- [THỰC NGHIỆM] Script đo hiệu năng KDF
+│   ├── analytics.py          <-- [PHÂN TÍCH] Thống kê avalanche effect/entropy
+│   └── generate_hex_samples.py
+├── figure/                   <-- Chứa các sơ đồ Pipeline và biểu đồ kết quả
+├── report/                   <-- Mã nguồn LaTeX của báo cáo
 ├── main.py                   <-- [ENTRYPOINT] Điểm khởi chạy ứng dụng
-├── benchmark.py              <-- [THỰC NGHIỆM] Script đo hiệu năng KDF
-├── docs/                     <-- Tài liệu hướng dẫn báo cáo và pipeline
+├── docs/                     <-- Tài liệu hướng dẫn báo cáo và guide
 └── pyproject.toml            <-- Quản lý dependency bằng uv
 ```
 
@@ -72,13 +77,13 @@ uv run main.py
 ### 4. Chạy thực nghiệm (Benchmark)
 Để lấy số liệu Iterations vs Time phục vụ báo cáo:
 ```bash
-uv run benchmark.py
+uv run scripts/benchmark.py
 ```
 
 ---
 
 ## 📊 Phân tích Thực nghiệm
-Dự án bao gồm script `benchmark.py` giúp tạo ra file biểu đồ `kdf_benchmark_results.png`. Biểu đồ này phân tích sự đánh đổi (Trade-off) giữa tính bảo mật (số vòng lặp KDF) và trải nghiệm người dùng (Work Factor), một phần quan trọng trong yêu cầu của môn học.
+Dự án bao gồm script `scripts/benchmark.py` giúp tạo ra file biểu đồ `figure/kdf_benchmark_results.png`. Biểu đồ này phân tích sự đánh đổi (Trade-off) giữa tính bảo mật (số vòng lặp KDF) và trải nghiệm người dùng (Work Factor), một phần quan trọng trong yêu cầu của môn học.
 
 ---
 **Nhóm thực hiện**: [Tên nhóm của bạn]

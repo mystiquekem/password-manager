@@ -2,11 +2,11 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Phase-based Encryption Pipeline}}{12}{figure.caption.5}%
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Phase-based Decryption Pipeline}}{13}{figure.caption.6}%
-\contentsline {figure}{\numberline {3.3}{\ignorespaces Binary Vault File Format}}{15}{figure.caption.7}%
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Phase-based Encryption Pipeline}}{13}{figure.caption.5}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Phase-based Decryption Pipeline}}{14}{figure.caption.6}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Binary Vault File Format}}{16}{figure.caption.7}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces KDF Latency vs. Iteration Count Performance Benchmark}}{16}{figure.caption.8}%
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Visual Evidence of Statistical Cryptographic Diffusion}}{18}{figure.caption.11}%
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Hexadecimal Mapping and Divergence Analysis}}{19}{figure.caption.12}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces KDF Latency vs. Iteration Count Performance Benchmark}}{18}{figure.caption.8}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Visual Evidence of Statistical Cryptographic Diffusion}}{20}{figure.caption.11}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Hexadecimal Mapping and Divergence Analysis}}{21}{figure.caption.12}%
 \addvspace {10\p@ }

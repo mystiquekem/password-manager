@@ -3,6 +3,40 @@
 
 This chapter delineates the practical implementation of the theoretical cryptographic primitives discussed in Chapter \ref{ch:theory}. The methodology section details the concrete architecture of the password manager, explicitly defining how AES, HMAC, and PBKDF2 are orchestrated to construct a secure computational pipeline and a robust data storage format.
 
+\section{Implementation Environment and Primitives}
+
+To ensure complete control over the cryptographic lifecycle, the system is implemented using the \textbf{Python 3.11} ecosystem. The core cryptographic operations leverage the \textit{Hazardous Materials} (hazmat) layer of the \texttt{cryptography} library. This design choice is critical for academic transparency, as it requires the explicit management of low-level primitives—such as initialization vectors, padding schemes, and MAC composition—rather than relying on high-level, opaque abstractions like \texttt{Fernet}.
+
+\begin{lstlisting}[language=Python, caption=Explicit Cryptographic Implementation Pipeline, label=lst:pipeline]
+def derive_keys(password: str, salt: bytes, iterations: int):
+    # PBKDF2 with SHA256 for Key Stretching
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32, salt=salt, iterations=iterations
+    )
+    full_key = kdf.derive(password.encode())
+    # Key Splitting: 16b for AES + 16b for HMAC
+    return full_key[:16], full_key[16:]
+
+def encrypt_vault(data_bytes: bytes, aes_key: bytes, hmac_key: bytes):
+    # 1. PKCS7 Padding for Block Alignment
+    padder = padding.PKCS7(128).padder()
+    padded_data = padder.update(data_bytes) + padder.finalize()
+
+    # 2. Encryption: AES-128-CBC with CSPRNG IV
+    iv = secrets.token_bytes(16)
+    cipher = Cipher(algorithms.AES(aes_key), modes.CBC(iv))
+    encryptor = cipher.encryptor()
+    ciphertext = encryptor.update(padded_data) + encryptor.finalize()
+
+    # 3. Integrity: HMAC-SHA256 (Encrypt-then-MAC)
+    h = hmac.HMAC(hmac_key, hashes.SHA256())
+    h.update(ciphertext)
+    mac_tag = h.finalize()
+
+    return iv, mac_tag, ciphertext
+\end{lstlisting}
+
 \section{Cryptographic Pipeline}
 
 \subsection{System Flow Overview}
@@ -52,4 +86,21 @@ The vault file consists of four contiguous segments: a 16-byte random Salt for k
 \subsection{Safe Decryption and Verification Process}
 The retrieval of plaintext data from the vault hinges upon the uncompromising principles of the EtM composition, which dictates that authentication must precede any decryption transformation. The process begins with the reconstruction of the Master Key ($MK$) using the retrieved Salt and the user's password, followed by a secondary key splitting to recover $K_{enc}$ and $K_{mac}$. Before the AES cipher is initialized, the system computes a candidate MAC from the stored $IV$ and ciphertext. 
 
-A constant-time comparison is then performed between the candidate and the stored $Tag$. In the event of a verification failure, the system immediately rejects the vault as compromised, aborting the routine without ever invoking the AES decryption function. This critical invariant completely neutralizes potential vulnerabilities to padding oracle attacks. Only upon a successful integrity match is the AES-128-CBC decryption initialized, transforming the ciphertext back into plaintext and stripping the PKCS\#7 padding to recover the original data.
+A constant-time comparison is then performed between the candidate and the stored $Tag$. In the event of a verification failure, the system immediately rejects the vault as compromised, aborting the routine without ever invoking the AES decryption function. This critical invariant completely neutralizes potential vulnerabilities to padding oracle attacks. A constant-time comparison is then performed between the candidate and the stored $Tag$. In the event of a verification failure, the system immediately rejects the vault as compromised, aborting the routine without ever invoking the AES decryption function. This critical invariant completely neutralizes potential vulnerabilities to padding oracle attacks. Only upon a successful integrity match is the AES-128-CBC decryption initialized, transforming the ciphertext back into plaintext and stripping the PKCS\#7 padding to recover the original data.
+
+\begin{lstlisting}[language=Python, caption=Safe Authentication and Decryption Flow, label=lst:decryption]
+def decrypt_vault(ciphertext, iv, stored_mac, aes_key, hmac_key):
+    # 1. Integrity Check: Verify HMAC BEFORE Decryption
+    h = hmac.HMAC(hmac_key, hashes.SHA256())
+    h.update(ciphertext)
+    h.verify(stored_mac) # Throws error if mismatch
+
+    # 2. Decryption: AES-128-CBC
+    cipher = Cipher(algorithms.AES(aes_key), modes.CBC(iv))
+    decryptor = cipher.decryptor()
+    padded_data = decryptor.update(ciphertext) + decryptor.finalize()
+
+    # 3. Remove PKCS7 Padding
+    unpadder = padding.PKCS7(128).unpadder()
+    return unpadder.update(padded_data) + unpadder.finalize()
+\end{lstlisting}

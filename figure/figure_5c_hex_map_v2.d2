@@ -1,0 +1,47 @@
+direction: down
+
+classes: {
+  salt: { style: { fill: "#E8F5E9"; stroke: "#4CAF50" } }
+  iv: { style: { fill: "#E3F2FD"; stroke: "#2196F3" } }
+  mac: { style: { fill: "#FFF3E0"; stroke: "#FF9800" } }
+  cipher: { style: { fill: "#FFEBEE"; stroke: "#F44336" } }
+  label: { style: { stroke-dash: 3; font-size: 10 } }
+}
+
+HexMapV2: "Figure 5.C: Hex Dump Map (vault2.enc)" {
+  style.fill: "#f8f9fa"
+  
+  # The "Memory" Rows for Vault 2
+  Rows: {
+    direction: down
+    style.stroke: transparent
+    
+    R1: "00000000  BE 78 24 E4 E7 1A 28 2C 15 9A DA 55 AE BC C3 29" { class: salt }
+    R2: "00000010  C9 A8 D1 BA DD 4D 51 D8 08 6C 47 D9 51 53 54 8C" { class: iv }
+    R3: "00000020  51 4E 64 FC 38 96 A4 A3 B5 EC EB 8D 85 B3 D8 2D" { class: mac }
+    R4: "00000030  5C 86 01 15 97 f8 22 5C 04 18 C5 15 E8 D3 41 C6" { class: mac }
+    R5: "00000040  4B 35 4D AE DA 73 15 D6 CE F4 6B 4A CC 04 A3 AA" { class: cipher }
+    R6: "00000050  4C EF E9 41 CC 6B 2C B5 85 1B B4 C8 74 18 82 C5" { class: cipher }
+    R7: "00000060  38 37 D5 22 4B 2E 0C 3C 7B 5F 3B D5 9B 18 63 A6" { class: cipher }
+    
+    R1 -> R2 -> R3 -> R4 -> R5 -> R6 -> R7 { style.stroke: transparent }
+  }
+
+  # Legends / Annotations on the right
+  Annotations: {
+    direction: down
+    style.stroke: transparent
+    
+    L1: "**Random Salt (16B)**\n(Different from Vault 1)" { class: label }
+    L2: "**Random IV (16B)**\n(Different from Vault 1)" { class: label }
+    L3: "**HMAC-SHA256 Tag (32B)**\n(Unique Signature)" { class: label }
+    L4: "**Ciphertext**\n(Completely Different Bytes)" { class: label }
+  }
+
+  # Connect rows to labels
+  Rows.R1 -> Annotations.L1
+  Rows.R2 -> Annotations.L2
+  Rows.R3 -> Annotations.L3
+  Rows.R4 -> Annotations.L3
+  Rows.R5 -> Annotations.L4
+}

@@ -1,7 +1,14 @@
+import sys
 import time
 import secrets
 import json
 import matplotlib.pyplot as plt
+from pathlib import Path
+
+# Add project root to sys.path
+root_dir = Path(__file__).parent.parent
+sys.path.append(str(root_dir))
+
 from src.crypto.vault_cipher import derive_keys, encrypt_vault, decrypt_vault
 
 def benchmark_kdf(iterations_list, password="master_password", salt=b"fixed_salt_16byte"):

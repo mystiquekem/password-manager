@@ -1,0 +1,107 @@
+direction: down
+
+# Colors and Styling
+classes: {
+  input: {
+    style: {
+      fill: "#E8F5E9"
+      stroke: "#4CAF50"
+      border-radius: 5
+    }
+  }
+  process: {
+    style: {
+      fill: "#E3F2FD"
+      stroke: "#2196F3"
+      border-radius: 5
+    }
+  }
+  output: {
+    style: {
+      fill: "#FFF3E0"
+      stroke: "#FF9800"
+      border-radius: 5
+    }
+  }
+  key: {
+    style: {
+      fill: "#FCE4EC"
+      stroke: "#E91E63"
+      border-radius: 5
+    }
+  }
+  decision: {
+    shape: diamond
+    style: {
+      fill: "#FFF9C4"
+      stroke: "#FBC02D"
+    }
+  }
+}
+
+# --- Phase 1: Load & Key Deriv ---
+Initial: "Phase 1: Input & Key Reconstruction" {
+  direction: right
+  style: { stroke-dash: 3; fill: "#F5F5F5" }
+  
+  File: "Encrypted File" { shape: cylinder; class: input }
+  Pass: "Master Password" { class: input }
+  Algo: "PBKDF2-HMAC-SHA256" { class: process }
+  MKey: "Master Key (32B)" { class: key }
+  
+  File -> Algo: "Salt"
+  Pass -> Algo
+  Algo -> MKey
+}
+
+# --- Phase 2: Splitting ---
+Splitting: "Phase 2: Key Splitting" {
+  direction: right
+  style: { stroke-dash: 3; fill: "#F5F5F5" }
+  
+  AESK: "AES Key" { class: key }
+  HMACK: "HMAC Key" { class: key }
+  
+  Initial.MKey -> AESK
+  Initial.MKey -> HMACK
+}
+
+# --- Phase 3: Integrity Check ---
+Integrity: "Phase 3: Integrity Verification (MAC)" {
+  direction: down
+  style: { stroke-dash: 3; fill: "#F5F5F5" }
+  
+  Calc: "Re-calculate HMAC\non Ciphertext" { class: process }
+  Check: "Is MAC Valid?" { class: decision }
+  
+  Error: "Integrity Error\n(Abort)" { 
+    class: output
+    style.fill: "#FFEBEE"
+    style.stroke: "#F44336"
+  }
+  
+  Calc -> Check
+  Check -> Error: "No"
+}
+
+# --- Phase 4: Decryption ---
+Decryption: "Phase 4: Decryption" {
+  direction: down
+  style: { stroke-dash: 3; fill: "#F5F5F5" }
+  
+  AES: "AES-128-CBC Decrypt" { class: process }
+  Unpad: "Remove PKCS7 Padding" { class: process }
+  Plain: "Plaintext (JSON)" { class: output }
+  
+  AES -> Unpad -> Plain
+}
+
+# --- Global Connections ---
+Initial.File -> Integrity.Calc: "Ciphertext"
+Splitting.HMACK -> Integrity.Calc
+Initial.File -> Integrity.Check: "Stored MAC"
+
+Integrity.Check -> Decryption.AES: "Yes"
+
+Initial.File -> Decryption.AES: "IV & Ciphertext"
+Splitting.AESK -> Decryption.AES

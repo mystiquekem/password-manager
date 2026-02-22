@@ -1,0 +1,51 @@
+direction: down
+
+classes: {
+  header: {
+    style: { fill: "#E3F2FD"; stroke: "#2196F3"; font-weight: bold }
+  }
+  annotation: {
+    style: { stroke-dash: 4; font-size: 11 }
+  }
+}
+
+VaultFile: "Figure 2: Vault File Structure (.enc)" {
+  # Layout the blocks horizontally
+  Blocks: {
+    direction: right
+    style.fill: transparent
+    
+    Salt: "Salt\n(16 Bytes)" {
+      style: { fill: "#E8F5E9"; stroke: "#4CAF50" }
+    }
+    IV: "IV\n(16 Bytes)" {
+      style: { fill: "#E8F5E9"; stroke: "#4CAF50" }
+    }
+    HMAC: "HMAC Tag\n(32 Bytes)" {
+      style: { fill: "#FFF3E0"; stroke: "#FF9800" }
+    }
+    Data: "Encrypted Data\n(AES-CBC Ciphertext)" {
+      style: { fill: "#FCE4EC"; stroke: "#E91E63" }
+    }
+
+    Salt -> IV -> HMAC -> Data { style.stroke: transparent }
+  }
+
+  # Explanations positioned below the blocks
+  Explanation: {
+    direction: right
+    style.fill: transparent
+    style.stroke: transparent
+    
+    Exp1: "Prevention of Rainbow Table\n(CSPRNG Random)" { class: annotation }
+    Exp2: "Required for AES-CBC mode\n(Unique per encryption)" { class: annotation }
+    Exp3: "Integrity Authentication\n(Protects entire file)" { class: annotation }
+    Exp4: "Encrypted JSON data\n(Variable length)" { class: annotation }
+  }
+
+  # Aligning annotations to blocks
+  Blocks.Salt -> Explanation.Exp1
+  Blocks.IV -> Explanation.Exp2
+  Blocks.HMAC -> Explanation.Exp3
+  Blocks.Data -> Explanation.Exp4
+}

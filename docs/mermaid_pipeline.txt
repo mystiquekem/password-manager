@@ -1,0 +1,40 @@
+graph TD
+    %% Giai đoạn Input
+    Input[Nhập Master Password] --> KDF_Process{Dẫn xuất Khóa - KDF}
+    
+    %% Giai đoạn xử lý Key (Session 8)
+    subgraph "Giai đoạn 1: Key Stretching (Lý thuyết Session 8)"
+        KDF_Process --> |PBKDF2-HMAC-SHA256| Iterations[Số vòng lặp: 390.000]
+        KDF_Process --> |CSPRNG| RandomSalt[Random Salt: 16 bytes]
+        Iterations & RandomSalt --> DerivedKey[Khóa dẫn xuất: 32 bytes]
+    end
+
+    %% Giai đoạn Mã hóa (Session 4 & 8)
+    subgraph "Giai đoạn 2: Lõi Mật mã (Session 4 & 8)"
+        DerivedKey --> Split[Tách Khóa: 16b AES Key + 16b HMAC Key]
+        Data[Dữ liệu Mật khẩu - JSON] --> AES[Mã hóa AES-128-CBC]
+        Split --> |AES Key| AES
+        IV[Initialization Vector - Random] --> AES
+        
+        AES --> Ciphertext[Ciphertext]
+        Ciphertext --> HMAC[Tính toán HMAC-SHA256]
+        Split --> |HMAC Key| HMAC
+        HMAC --> MACTag[HMAC Tag - Tính Toàn vẹn]
+    end
+
+    %% Lưu trữ vật lý
+    subgraph "Giai đoạn 3: Đóng gói & Lưu trữ"
+        RandomSalt --> PhysicalFile[File .enc]
+        IV --> PhysicalFile
+        MACTag --> PhysicalFile
+        Ciphertext --> PhysicalFile
+    end
+
+    %% Thực nghiệm
+    subgraph "Giai đoạn 4: Đánh giá thực nghiệm (Experimental)"
+        Bench[Benchmark Script] --> Plot[Biểu đồ: Iterations vs Time]
+        Attack[Giả lập Tấn công] --> AuthFail[Bằng chứng Integrity Failure]
+    end
+
+    %% Liên kết
+    PhysicalFile -.-> Bench

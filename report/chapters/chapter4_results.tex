@@ -1,0 +1,28 @@
+\chapter{Experimental Results}
+\label{ch:results}
+
+In this chapter, we analyze the performance and security properties of our implementation.
+
+\section{Security Analysis: Hex Dump Visualization}
+We verify the non-deterministic nature of our encryption through hex dump analysis. Figure \ref{fig:hex_map} shows the mapping of a sample vault file to its cryptographic components.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{../figure/figure_5_hex_map.png}
+    \caption{Annotated Hex Map of vault1.enc}
+    \label{fig:hex_map}
+\end{figure}
+
+\subsection{Proof of Diffusion}
+By comparing two different vault files generated with the same master password, we can observe that they share no identical bytes in the ciphertext or MAC, as seen in Figure \ref{fig:diffusion}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figure/figure_5b_diffusion_comparison.png}
+    \caption{Diffusion Comparison between Vault 1 and Vault 2}
+    \label{fig:diffusion}
+\end{figure}
+
+\section{Performance Benchmarks}
+Performance testing was conducted to evaluate the speed of vault operations. The PBKDF2 iteration count significantly affects the time required to open a vault but provides security against brute-force attacks.
+% [Add benchmark table here later if needed]

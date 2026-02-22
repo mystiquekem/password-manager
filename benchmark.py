@@ -1,10 +1,8 @@
 import time
 import secrets
 import json
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.primitives import hashes, hmac, padding
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 import matplotlib.pyplot as plt
+from src.crypto.vault_cipher import derive_keys, encrypt_vault, decrypt_vault
 
 def benchmark_kdf(iterations_list, password="master_password", salt=b"fixed_salt_16byte"):
     results = []
@@ -12,37 +10,22 @@ def benchmark_kdf(iterations_list, password="master_password", salt=b"fixed_salt
     print("-" * 30)
     
     for i in iterations_list:
+        # Override global constant locally for benchmark
+        from src.core import config
+        config.KDF_ITERATIONS = i
+        
         start_time = time.perf_counter()
         
-        # 1. PBKDF2 Key Derivation
-        kdf = PBKDF2HMAC(
-            algorithm=hashes.SHA256(),
-            length=32,
-            salt=salt,
-            iterations=i,
-        )
-        full_key = kdf.derive(password.encode())
-        aes_key = full_key[:16]
-        hmac_key = full_key[16:]
+        # 1. Derive Keys
+        aes_key, hmac_key = derive_keys(password, salt)
         
-        # 2. Simulated AES-CBC + HMAC (matching password-manager.py)
+        # 2. Encrypt & Authenticate
         data = {"test": "data" * 10}
         plaintext = json.dumps(data).encode()
+        iv, mac_tag, ciphertext = encrypt_vault(plaintext, aes_key, hmac_key)
         
-        # Padding
-        padder = padding.PKCS7(128).padder()
-        padded_data = padder.update(plaintext) + padder.finalize()
-        
-        # Encrypt
-        iv = secrets.token_bytes(16)
-        cipher = Cipher(algorithms.AES(aes_key), modes.CBC(iv))
-        encryptor = cipher.encryptor()
-        ciphertext = encryptor.update(padded_data) + encryptor.finalize()
-        
-        # HMAC
-        h = hmac.HMAC(hmac_key, hashes.SHA256())
-        h.update(ciphertext)
-        h.finalize()
+        # 3. Verify & Decrypt
+        decrypt_vault(ciphertext, iv, mac_tag, aes_key, hmac_key)
         
         end_time = time.perf_counter()
         duration_ms = (end_time - start_time) * 1000
@@ -57,7 +40,7 @@ def plot_results(iterations, times):
     plt.xscale('log')
     plt.xlabel('Number of Iterations (log scale)')
     plt.ylabel('Time (ms)')
-    plt.title('Explicit Crypto Pipeline Performance vs. Iterations')
+    plt.title('Modular Crypto Pipeline Performance')
     plt.grid(True, which="both", ls="-", alpha=0.5)
     
     # Annotate points
@@ -69,7 +52,7 @@ def plot_results(iterations, times):
 
 if __name__ == "__main__":
     test_iterations = [1000, 10000, 100000, 400000, 1000000]
-    print("Starting Explicit Crypto Pipeline Benchmark...\n")
+    print("Starting Modular Crypto Pipeline Benchmark...\n")
     times = benchmark_kdf(test_iterations)
     
     try:

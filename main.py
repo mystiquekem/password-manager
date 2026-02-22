@@ -1,6 +1,5 @@
-def main():
-    print("Hello from password-manager!")
-
+from src.ui.app_window import AppWindow
 
 if __name__ == "__main__":
-    main()
+    app = AppWindow()
+    app.mainloop()

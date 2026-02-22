@@ -4,13 +4,13 @@
 This chapter describes the underlying cryptographic primitives used in the system and their specific integration within the codebase.
 
 \section{Key Derivation with PBKDF2}
-PBKDF2 (Password-Based Key Derivation Function 2) is used to transform the user's master password into a strong cryptographic key. We use HMAC-SHA256 as the pseudo-random function with 390,000 iterations to resist brute-force attacks.
+PBKDF2 (Password-Based Key Derivation Function 2) is used to transform the user's master password into a strong cryptographic key, as recommended by NIST SP 800-132 \cite{nist800132} and specified in RFC 2898 \cite{rfc2898}. We use HMAC-SHA256 as the pseudo-random function with 390,000 iterations to resist brute-force attacks.
 
 \section{Encryption with AES-128-CBC}
-For data confidentiality, we utilize AES in CBC (Cipher Block Chaining) mode. A random 16-byte Initialization Vector (IV) is generated for every encryption operation to ensure that identical plaintexts result in different ciphertexts.
+For data confidentiality, we utilize AES in CBC (Cipher Block Chaining) mode. AES is specified in FIPS PUB 197 \cite{fips197}, and the CBC mode is described in NIST SP 800-38A \cite{nist80038a}. A random 16-byte Initialization Vector (IV) is generated for every encryption operation to ensure that identical plaintexts result in different ciphertexts.
 
 \section{Authentication with HMAC-SHA256}
-To prevent "padding oracle" attacks and ensure data integrity, we compute a Hash-based Message Authentication Code (HMAC) over the entire ciphertext and IV. This tag is verified before any decryption occurs.
+To prevent "padding oracle" attacks and ensure data integrity, we compute a Hash-based Message Authentication Code (HMAC), specified in FIPS PUB 198-1 \cite{fips198_1}, over the entire ciphertext and IV. This tag is verified before any decryption occurs.
 
 \section{Code Implementation}
 The core logic resides in \texttt{src/crypto/vault\_cipher.py}, which provides the \texttt{VaultCipher} class. This class handles padding, block cipher initialization, and MAC generation. The \texttt{VaultManager} in \texttt{src/core/vault\_manager.py} manages the file I/O and high-level vault operations.

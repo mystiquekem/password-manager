@@ -1,14 +1,10 @@
 \chapter{Conclusion}
 \label{ch:conclusion}
 
-The development of this password manager has demonstrated the successful integration of modern cryptographic primitives into a functional application. By manually implementing the pipeline and constructing a custom vault file format, we have achieved a high degree of transparency and security control.
+The design and implementation of this secure password manager have successfully demonstrated the practical application of core cryptographic primitives within a cohesive security architecture. By transitioning from abstract theoretical concepts to a concrete "white-box" implementation, the project has achieved its primary objective of constructing a transparent and auditable encryption pipeline. The integration of AES-128 in CBC mode, paired with HMAC-SHA256 in an Encrypt-then-MAC configuration, provides a high-assurance solution that guarantees both the confidentiality and integrity of stored credentials while resisting sophisticated chosen-ciphertext attacks.
 
-\section{Summary of Achievements}
-\begin{itemize}
-    \item Full implementation of Encrypt-then-MAC using AES and HMAC.
-    \item Modular code structure following industry best practices.
-    \item Comprehensive visual documentation of cryptographic flows.
-\end{itemize}
+Beyond its technical functionality, the system serves as an empirical validation of international security standards, specifically those promulgated by NIST and the IETF. The rigorous benchmarking of the PBKDF2 algorithm ensured an optimal balance between computational work factor and user experience, while statistical analysis of the vault structure confirmed the existence of robust cryptographic diffusion. This project underscores the critical importance of defensive design patterns, such as key splitting and the strict separation of encryption and authentication layers, in building resilient information systems.
 
-\section{Future Work}
-Future enhancements could include multi-factor authentication, cloud synchronization with end-to-end encryption, and hardware security module (HSM) support for key storage.
+Beyond its development, the system's robust security posture provides a foundation for several avenues of future enhancement. A primary area for improvement lies in the transition of the key derivation mechanism to more modern, memory-hard functions. Specifically, replacing PBKDF2 with Argon2id—the winner of the Password Hashing Competition—would provide significantly greater resistance against hardware-accelerated brute-force attacks from GPUs and ASICs. Unlike PBKDF2, which is primarily CPU-bound, Argon2id mandates a configurable amount of memory, effectively leveling the playing field between an attacker and a legitimate user.
+
+Furthermore, future iterations of the software could implement advanced memory protection techniques to safeguard sensitive data during runtime. While the current architecture ensures "security at rest," the implementation of memory-zeroing routines and the encryption of in-RAM data structures would provide "security in use," mitigating the risks associated with cold-boot attacks or unauthorized memory dumps. Additionally, the integration of multi-factor authentication (MFA) and the transition toward a decentralized synchronization model could further elevate the system's utility and security profile in a distributed environment.

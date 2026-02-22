@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.13)  22 FEB 2026 15:46
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.13)  22 FEB 2026 19:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -92,6 +92,15 @@ File: pdftex.def 2024/04/13 v1.2c Graphics/color driver for pdftex
 \Gin@req@height=\dimen143
 \Gin@req@width=\dimen144
 )
+(/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/float/flo
+at.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count273
+\float@exts=\toks20
+\float@box=\box52
+\@float@everytoks=\toks21
+\@floatcapt=\box53
+)
 (/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/
 hyperref.sty
 Package: hyperref 2024-11-05 v7.01l Hypertext links for LaTeX
@@ -149,12 +158,12 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 /kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ))
-\c@section@level=\count273
+\c@section@level=\count274
 )
 (/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/etoolbox/
 etoolbox.sty
 Package: etoolbox 2025/02/11 v2.5l e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count274
+\etb@tempcnta=\count275
 )
 (/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/generic/stringe
 nc/stringenc.sty
@@ -162,8 +171,8 @@ Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
 \@linkdim=\dimen145
-\Hy@linkcounter=\count275
-\Hy@pagecounter=\count276
+\Hy@linkcounter=\count276
+\Hy@pagecounter=\count277
 
 (/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/
 pd1enc.def
@@ -175,7 +184,7 @@ Now handling font encoding PD1 ...
 /intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count277
+\Hy@SavedSpaceFactor=\count278
 
 (/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/
 puenc.def
@@ -190,7 +199,7 @@ Package hyperref Info: Plain pages OFF on input line 4172.
 Package hyperref Info: Backreferencing OFF on input line 4177.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4424.
-\c@Hy@tempcnt=\count278
+\c@Hy@tempcnt=\count279
 
 (/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/url/url.s
 ty
@@ -209,7 +218,7 @@ alc/bigintcalc.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
-\Fld@menulength=\count279
+\Fld@menulength=\count280
 \Field@Width=\dimen147
 \Fld@charsize=\dimen148
 Package hyperref Info: Hyper figures OFF on input line 6042.
@@ -225,9 +234,9 @@ gshi-ltx.sty
 Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
 package with kernel methods
 )
-\Hy@abspage=\count280
-\c@Item=\count281
-\c@Hfootnote=\count282
+\Hy@abspage=\count281
+\c@Item=\count282
+\c@Hfootnote=\count283
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
 
@@ -241,8 +250,8 @@ Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend pac
 kage
 with kernel methods
 )
-\Fld@listcount=\count283
-\c@bookmark@seq@number=\count284
+\Fld@listcount=\count284
+\c@bookmark@seq@number=\count285
 
 (/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/rerunfile
 check/rerunfilecheck.sty
@@ -259,17 +268,17 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 (/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/listings/
 listings.sty
-\lst@mode=\count285
-\lst@gtempboxa=\box52
-\lst@token=\toks20
-\lst@length=\count286
+\lst@mode=\count286
+\lst@gtempboxa=\box54
+\lst@token=\toks22
+\lst@length=\count287
 \lst@currlwidth=\dimen149
-\lst@column=\count287
-\lst@pos=\count288
+\lst@column=\count288
+\lst@pos=\count289
 \lst@lostspace=\dimen150
 \lst@width=\dimen151
-\lst@newlines=\count289
-\lst@lineno=\count290
+\lst@newlines=\count290
+\lst@lineno=\count291
 \lst@maxwidth=\dimen152
 
 (/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/listings/
@@ -279,9 +288,9 @@ File: lstpatch.sty 2024/09/23 1.10c (Carsten Heinz)
 (/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/listings/
 lstmisc.sty
 File: lstmisc.sty 2024/09/23 1.10c (Carsten Heinz)
-\c@lstnumber=\count291
-\lst@skipnumbers=\count292
-\lst@framebox=\box53
+\c@lstnumber=\count292
+\lst@skipnumbers=\count293
+\lst@framebox=\box55
 )
 (/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/listings/
 listings.cfg
@@ -309,9 +318,9 @@ Package: geometry 2020/01/02 v5.9 Page Geometry
 fvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 )
-\Gm@cnth=\count293
-\Gm@cntv=\count294
-\c@Gm@tempcnt=\count295
+\Gm@cnth=\count294
+\Gm@cntv=\count295
+\c@Gm@tempcnt=\count296
 \Gm@bindingoffset=\dimen153
 \Gm@wd@mp=\dimen154
 \Gm@odd@mp=\dimen155
@@ -320,51 +329,84 @@ Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 \Gm@layoutheight=\dimen158
 \Gm@layouthoffset=\dimen159
 \Gm@layoutvoffset=\dimen160
-\Gm@dimlist=\toks21
+\Gm@dimlist=\toks23
+)
+(/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/caption/s
+ubcaption.sty
+Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
+
+(/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/caption/c
+aption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+
+(/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/caption/c
+aption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+\caption@tempdima=\dimen161
+\captionmargin=\dimen162
+\caption@leftmargin=\dimen163
+\caption@rightmargin=\dimen164
+\caption@width=\dimen165
+\caption@indent=\dimen166
+\caption@parindent=\dimen167
+\caption@hangindent=\dimen168
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count297
+\c@continuedfloat=\count298
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+Package caption Info: listings package is loaded.
+)
+Package caption Info: New subtype `subfigure' on input line 238.
+\c@subfigure=\count299
+Package caption Info: New subtype `subtable' on input line 238.
+\c@subtable=\count300
 )
 (/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend
 /l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count296
-\l__pdf_internal_box=\box54
-) (./main.aux (./chapters/chapter1_intro.aux)
-(./chapters/chapter2_architecture.aux) (./chapters/chapter3_implementation.aux)
-(./chapters/chapter4_results.aux) (./chapters/chapter5_conclusion.aux))
+\l__color_backend_stack_int=\count301
+\l__pdf_internal_box=\box56
+) (./main.aux (./chapters/abstract.aux)
+(./chapters/chapter1_intro.aux) (./chapters/chapter2_theory.aux)
+(./chapters/chapter3_methodology.aux) (./chapters/chapter4_results.aux)
+(./chapters/chapter5_conclusion.aux))
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
 
 (/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/context/base/mk
 ii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count297
-\scratchdimen=\dimen161
-\scratchbox=\box55
-\nofMPsegments=\count298
-\nofMParguments=\count299
-\everyMPshowfont=\toks22
-\MPscratchCnt=\count300
-\MPscratchDim=\dimen162
-\MPnumerator=\count301
-\makeMPintoPDFobject=\count302
-\everyMPtoPDFconversion=\toks23
+\scratchcounter=\count302
+\scratchdimen=\dimen169
+\scratchbox=\box57
+\nofMPsegments=\count303
+\nofMParguments=\count304
+\everyMPshowfont=\toks24
+\MPscratchCnt=\count305
+\MPscratchDim=\dimen170
+\MPnumerator=\count306
+\makeMPintoPDFobject=\count307
+\everyMPtoPDFconversion=\toks25
 )
 (/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/epstopdf-
 pkg/epstopdf-base.sty
@@ -377,12 +419,12 @@ ig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring OFF on input line 39.
+Package hyperref Info: Link coloring OFF on input line 43.
  (./main.out) (./main.out)
 \@outlinefile=\write3
 \openout3 = `main.out'.
 
-\c@lstlisting=\count303
+\c@lstlisting=\count308
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -418,10 +460,12 @@ Package hyperref Info: Link coloring OFF on input line 39.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <14.4> on input line 42.
+(Font)              <14.4> on input line 46.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 42.
+(Font)              <7> on input line 46.
 
 
 [1
@@ -429,15 +473,11 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 {/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/upd
 map/pdftex.map}] (./main.toc
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 3.
+(Font)              <12> on input line 4.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 3.
+(Font)              <8> on input line 4.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 3.
-)
-\tf@toc=\write4
-\openout4 = `main.toc'.
-
+(Font)              <6> on input line 4.
 
 
 
@@ -445,8 +485,39 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.44 \include{chapters/chapter1_intro}
-                                       [1
+l.38 ...{\numberline {5}Conclusion}{21}{chapter.5}
+                                                  % [1
+
+])
+\tf@toc=\write4
+\openout4 = `main.toc'.
+
+
+
+[2] (./main.lof)
+\tf@lof=\write5
+\openout5 = `main.lof'.
+
+
+
+[3
+
+] (./main.lot)
+\tf@lot=\write6
+\openout6 = `main.lot'.
+
+
+
+[4
+
+]
+\openout2 = `chapters/abstract.aux'.
+
+ (./chapters/abstract.tex)
+
+[5
+
+
 
 ]
 \openout2 = `chapters/chapter1_intro.aux'.
@@ -455,139 +526,171 @@ l.44 \include{chapters/chapter1_intro}
 Chapter 1.
 )
 
-[2
-
-
-{/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-
-super/cm-super-ts1.enc}]
-\openout2 = `chapters/chapter2_architecture.aux'.
-
- (./chapters/chapter2_architecture.tex
-Chapter 2.
-
-(/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/listings/
-lstlang1.sty
-File: lstlang1.sty 2024/09/23 1.10c listings language file
-)
-(/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/tex/latex/listings/
-lstlang1.sty
-File: lstlang1.sty 2024/09/23 1.10c listings language file
-)
-<../figure/figure_1a_encryption_flow.png, id=117, 2770.35pt x 4956.5175pt>
-File: ../figure/figure_1a_encryption_flow.png Graphic file (type png)
-<use ../figure/figure_1a_encryption_flow.png>
-Package pdftex.def Info: ../figure/figure_1a_encryption_flow.png  used on input
- line 29.
-(pdftex.def)             Requested size: 362.37569pt x 648.30267pt.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<../figure/figure_2_file_format.png, id=120, 2415.0225pt x 2551.5325pt>
-File: ../figure/figure_2_file_format.png Graphic file (type png)
-<use ../figure/figure_2_file_format.png>
-Package pdftex.def Info: ../figure/figure_2_file_format.png  used on input line
- 39.
-(pdftex.def)             Requested size: 362.37569pt x 382.83017pt.
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-)
-
-[3
-
-
-
-
-]
-
-[4 <../figure/figure_1a_encryption_flow.png>]
-
-[5 <../figure/figure_2_file_format.png>]
-\openout2 = `chapters/chapter3_implementation.aux'.
-
-
-(./chapters/chapter3_implementation.tex
-Chapter 3.
-)
-
 [6
 
 
 
 
 ]
+
+[7]
+\openout2 = `chapters/chapter2_theory.aux'.
+
+ (./chapters/chapter2_theory.tex
+Chapter 2.
+
+
+[8
+
+
+
+
+]
+
+[9{/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/c
+m-super/cm-super-ts1.enc}])
+
+[10]
+\openout2 = `chapters/chapter3_methodology.aux'.
+
+ (./chapters/chapter3_methodology.tex
+Chapter 3.
+<../figure/figure_1a_encryption_flow.png, id=288, 2770.35pt x 4956.5175pt>
+File: ../figure/figure_1a_encryption_flow.png Graphic file (type png)
+<use ../figure/figure_1a_encryption_flow.png>
+Package pdftex.def Info: ../figure/figure_1a_encryption_flow.png  used on input
+ line 13.
+(pdftex.def)             Requested size: 362.37569pt x 648.30267pt.
+
+
+[11
+
+
+
+
+]
+
+[12 <../figure/figure_1a_encryption_flow.png>]
+<../figure/figure_1b_decryption_flow.png, id=302, 2738.23pt x 3870.46pt>
+File: ../figure/figure_1b_decryption_flow.png Graphic file (type png)
+<use ../figure/figure_1b_decryption_flow.png>
+Package pdftex.def Info: ../figure/figure_1b_decryption_flow.png  used on input
+ line 22.
+(pdftex.def)             Requested size: 362.37569pt x 512.21341pt.
+
+
+[13 <../figure/figure_1b_decryption_flow.png>]
+<../figure/figure_2_file_format.png, id=310, 2991.175pt x 2573.615pt>
+File: ../figure/figure_2_file_format.png Graphic file (type png)
+<use ../figure/figure_2_file_format.png>
+Package pdftex.def Info: ../figure/figure_2_file_format.png  used on input line
+ 45.
+(pdftex.def)             Requested size: 362.37569pt x 311.76573pt.
+
+
+[14])
+
+[15 <../figure/figure_2_file_format.png>]
 \openout2 = `chapters/chapter4_results.aux'.
 
  (./chapters/chapter4_results.tex
 Chapter 4.
-<../figure/figure_5_hex_map.png, id=157, 4524.905pt x 3085.5275pt>
-File: ../figure/figure_5_hex_map.png Graphic file (type png)
-<use ../figure/figure_5_hex_map.png>
-Package pdftex.def Info: ../figure/figure_5_hex_map.png  used on input line 11.
-
-(pdftex.def)             Requested size: 407.66833pt x 277.96799pt.
-<../figure/figure_5b_diffusion_comparison.png, id=159, 3890.535pt x 1457.445pt>
-
-File: ../figure/figure_5b_diffusion_comparison.png Graphic file (type png)
-<use ../figure/figure_5b_diffusion_comparison.png>
-Package pdftex.def Info: ../figure/figure_5b_diffusion_comparison.png  used on 
-input line 21.
-(pdftex.def)             Requested size: 362.37569pt x 135.74557pt.
+<../figure/kdf_benchmark_results.png, id=322, 722.7pt x 433.62pt>
+File: ../figure/kdf_benchmark_results.png Graphic file (type png)
+<use ../figure/kdf_benchmark_results.png>
+Package pdftex.def Info: ../figure/kdf_benchmark_results.png  used on input lin
+e 13.
+(pdftex.def)             Requested size: 317.07614pt x 190.24422pt.
 
 
-[7
+[16
 
 
 
 
- <../figure/figure_5_hex_map.png>])
+ <../figure/kdf_benchmark_results.png>]
 
-[8 <../figure/figure_5b_diffusion_comparison.png>]
+[17]
+<../figure/figure_6_statistical_diffusion.png, id=337, 1084.05pt x 361.35pt>
+File: ../figure/figure_6_statistical_diffusion.png Graphic file (type png)
+<use ../figure/figure_6_statistical_diffusion.png>
+Package pdftex.def Info: ../figure/figure_6_statistical_diffusion.png  used on 
+input line 68.
+(pdftex.def)             Requested size: 317.07614pt x 105.69307pt.
+<../figure/figure_5a_hex_map.png, id=339, 1947.275pt x 4783.8725pt>
+File: ../figure/figure_5a_hex_map.png Graphic file (type png)
+<use ../figure/figure_5a_hex_map.png>
+Package pdftex.def Info: ../figure/figure_5a_hex_map.png  used on input line 82
+.
+(pdftex.def)             Requested size: 217.42265pt x 534.11118pt.
+<../figure/figure_5b_hex_map.png, id=340, 1965.3425pt x 4783.8725pt>
+File: ../figure/figure_5b_hex_map.png Graphic file (type png)
+<use ../figure/figure_5b_hex_map.png>
+Package pdftex.def Info: ../figure/figure_5b_hex_map.png  used on input line 89
+.
+(pdftex.def)             Requested size: 217.42265pt x 529.22044pt.
+
+
+[18 <../figure/figure_6_statistical_diffusion.png>])
+
+[19 <../figure/figure_5a_hex_map.png> <../figure/figure_5b_hex_map.png>]
+
+[20]
 \openout2 = `chapters/chapter5_conclusion.aux'.
 
-
-(./chapters/chapter5_conclusion.tex
+ (./chapters/chapter5_conclusion.tex
 Chapter 5.
 )
 
-[9
+[21
 
 
 
 
-] (./main.aux (./chapters/chapter1_intro.aux)
-(./chapters/chapter2_architecture.aux) (./chapters/chapter3_implementation.aux)
+] (./main.bbl)
+
+[22
+
+
+
+] (./main.aux (./chapters/abstract.aux) (./chapters/chapter1_intro.aux)
+(./chapters/chapter2_theory.aux) (./chapters/chapter3_methodology.aux)
 (./chapters/chapter4_results.aux) (./chapters/chapter5_conclusion.aux))
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 8261C8203E6E1A147FED962E7114E0ED;3268.
+(rerunfilecheck)             Checksum: BB553D27469B343C8B93B4827FFC7E56;7545.
  ) 
 Here is how much of TeX's memory you used:
- 12081 strings out of 473190
- 195191 string characters out of 5715800
- 880444 words of memory out of 5000000
- 35132 multiletter control sequences out of 15000+600000
- 565285 words of font info for 58 fonts, out of 8000000 for 9000
+ 13325 strings out of 473190
+ 223327 string characters out of 5715800
+ 633497 words of memory out of 5000000
+ 36313 multiletter control sequences out of 15000+600000
+ 565595 words of font info for 58 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,6n,79p,388b,1231s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,9n,79p,861b,575s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/fonts/type1/publi
 c/amsfonts/cm/cmbx12.pfb></Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf
--dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></Volumes/SSD_M2_SATA_1TB/usr/lo
-cal/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></Volumes/
-SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/c
-m/cmr6.pfb></Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmtt10.pfb></Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2
-025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></Volumes/SSD_M2_SATA_
-1TB/usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
-
-Output written on main.pdf (10 pages, 754919 bytes).
+-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></Volumes/SSD_M2_SATA_1TB/usr/l
+ocal/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></Volumes
+/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmr10.pfb></Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmr12.pfb></Volumes/SSD_M2_SATA_1TB/usr/local/texlive/
+2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></Volumes/SSD_M2_SATA_
+1TB/usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><
+/Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmsy10.pfb></Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmsy6.pfb></Volumes/SSD_M2_SATA_1TB/usr/local
+/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></Volumes/SSD
+_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mti12.pfb></Volumes/SSD_M2_SATA_1TB/usr/local/texlive/2025/texmf-dist/fonts/typ
+e1/public/cm-super/sfrm1200.pfb>
+Output written on main.pdf (23 pages, 1212459 bytes).
 PDF statistics:
- 221 PDF objects out of 1000 (max. 8388607)
- 185 compressed objects within 2 object streams
- 44 named destinations out of 1000 (max. 500000)
- 173 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 444 PDF objects out of 1000 (max. 8388607)
+ 377 compressed objects within 4 object streams
+ 84 named destinations out of 1000 (max. 500000)
+ 332 words of extra memory for PDF output out of 10000 (max. 10000000)
 

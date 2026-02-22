@@ -2,11 +2,15 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{color}
 \usepackage{geometry}
+\usepackage{subcaption}
 \geometry{a4paper, margin=1in}
+\addto\captionsenglish{\renewcommand{\bibname}{References}}
+\addto\captionsenglish{\renewcommand{\contentsname}{Table of Contents}}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -40,11 +44,18 @@
 
 \maketitle
 \tableofcontents
+\listoffigures
+\listoftables
+\clearpage
 
+\include{chapters/abstract}
 \include{chapters/chapter1_intro}
-\include{chapters/chapter2_architecture}
-\include{chapters/chapter3_implementation}
+\include{chapters/chapter2_theory}
+\include{chapters/chapter3_methodology}
 \include{chapters/chapter4_results}
 \include{chapters/chapter5_conclusion}
+
+\bibliographystyle{ieeetr}
+\bibliography{references}
 
 \end{document}

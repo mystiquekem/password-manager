@@ -1,55 +1,87 @@
-# Hướng dẫn Viết Báo cáo: Biến Thư viện thành "Contribution" Học thuật
+# Hướng Dẫn Viết Báo Cáo Môn Introduction to Cryptography
 
-Bạn nói rất đúng, đi làm hay làm project thực tế thì **không ai tự viết lại thuật toán mã hóa (Don't roll your own crypto)** vì rất dễ sai lầm. Việc dùng thư viện chuẩn như `cryptography` là Best Practice.
+Báo cáo cho môn Mật mã học (Introduction to Cryptography) cần tập trung vào **cơ sở lý thuyết toán học/mật mã**, **cách thức áp dụng thuật toán**, và **phân tích an toàn**, thay vì sa đà vào cấu trúc code (Code Structure) hay các module phần mềm thông thường.
 
-Tuy nhiên, để có điểm cao môn **Introduction to Cryptography**, cái ta cần chứng minh trong báo cáo là: **"Nhóm biết chính xác bên trong cái hàm của thư viện đang làm gì, và tại sao lại chọn các tham số đó."**
-
-Dưới đây là dàn ý CỰC KỲ QUAN TRỌNG để bạn đưa vào Keyword của báo cáo, copy/paste những ý này vào các chương tương ứng để "chém gió" với giảng viên:
+Dưới đây là Outline chuẩn học thuật theo best practice dành cho project "Design and Implementation of a Secure Password Manager with Explicit Cryptographic Primitives":
 
 ---
 
-## Chương 1: Kiến trúc Mật mã của Password Manager
+## Chương 1: Introduction (Giới thiệu)
+*   **Bối cảnh (Context)**: Tầm quan trọng của Password Manager trong thời đại số. Đây là một chủ đề điển hình để áp dụng các kiến thức về an toàn thông tin và mật mã học vào thực tế.
+*   **Vấn đề (Problem Statement)**: Nguy cơ từ việc lưu trữ mật khẩu không an toàn. Sự cần thiết của việc hiểu rõ các cơ chế bảo vệ dữ liệu ở mức độ primitives thay vì chỉ sử dụng các thư viện black-box (thư viện đóng gói sẵn không rõ cơ chế bên trong).
+*   **Mục tiêu học tập & Đề tài (Objectives)**: 
+    *   **Áp dụng lý thuyết**: Vận dụng các nguyên thủy mật mã (Cryptographic Primitives) đã học như AES, HMAC, PBKDF2 để xây dựng một giải pháp lưu trữ an toàn.
+    *   **Thực thi "White-box"**: Xây dựng hệ thống một cách tường minh, cho phép kiểm soát và hiểu rõ từng bước của luồng xử lý dữ liệu (Encryption Pipeline).
+    *   **Đánh giá & Phân tích**: Thực hành đánh giá tính an toàn và hiệu năng của hệ thống dựa trên các tiêu chuẩn quốc tế (NIST, FIPS), từ đó củng cố kiến thức chuyên môn.
+    *   **Kỹ năng triển khai**: Hoàn thiện kỹ năng lập trình an toàn (Secure Coding) và tư duy thiết kế hệ thống có tính bảo mật cao.
 
-Thay vì chỉ nói "em import Fernet", hãy định nghĩa hệ thống của bạn là một **Hybrid Cryptosystem** theo Slides giả định:
+## Chương 2: Theoretical Background (Cơ sở Lý thuyết)
+*Đây là chương quan trọng nhất để chứng minh kiến thức môn học. Bạn cần trình bày lý thuyết nền tảng dựa trên các tiêu chuẩn và nghiên cứu uy tín.*
 
-1.  **Block Cipher Encryption (Session 4)**:
-    *   Thư viện `Fernet` bản chất là triển khai của **AES-128 ở chế độ CBC (Cipher Block Chaining)**.
-    *   **Tại sao không dùng ECB?** (Trích dẫn Session 4 - slide 37): ECB có nhược điểm bảo tồn tính thống kê (identical plaintexts -> identical ciphertexts).
-    *   Chế độ CBC mà nhóm sử dụng (thông qua Fernet) tự động sinh ra một **IV (Initialization Vector) 128-bit ngẫu nhiên** ở mỗi lần mã hóa, đảm bảo tính Non-deterministic.
+### 2.1. Symmetric-key Encryption (Mã hóa khóa đối xứng)
+*   **Tiêu chuẩn AES**: Giới thiệu thuật toán Rijndael theo tiêu chuẩn **FIPS PUB 197** [2]. Giải thích cấu trúc SPN (Substitution-Permutation Network).
+*   **Chế độ vận hành (Block Cipher Modes)**:
+    *   Dựa trên **NIST SP 800-38A** [3], trình bày cơ chế CBC (Cipher Block Chaining).
+    *   Lý do chọn CBC so với ECB: IV (Initialization Vector) đảm bảo "semantic security" (tính bí mật ngữ nghĩa), giúp che giấu các mẫu dữ liệu lặp lại.
+*   **Cơ chế đệm**: Sử dụng PKCS#7 (RFC 2315) để đảm bảo dữ liệu đầu vào là bội số của block size (16 bytes).
 
-2.  **Message Authentication Codes - MACs (Session 8)**:
-    *   Chỉ mã hóa (Encryption) là không đủ, cần phải chống can thiệp (Tampering/Integrity).
-    *   Hệ thống áp dụng cơ chế **Encrypt-then-MAC**. Cụ thể là dùng **HMAC-SHA256**.
-    *   **Ý nghĩa**: Bất kỳ ai sửa đổi file `.enc` (Dù chỉ 1 bit) thì khi giải mã, hàm `decrypt()` sẽ bắt lỗi `InvalidToken` do check MAC thất bại. (Slide 8 - Tính toàn vẹn).
+### 2.2. Key Derivation Functions (Hàm dẫn xuất khóa)
+*   **Vấn đề Shannon Entropy**: Giải thích lý do mật khẩu người dùng (low entropy) không thể dùng trực tiếp làm khóa (theo **NIST SP 800-132** [4]).
+*   **Giải thuật PBKDF2**:
+    *   Tham chiếu **RFC 2898 (PKCS #5)** [5].
+    *   **Iteration Count**: Cơ chế stretching để chống tấn công Brute-force/Dictionary offline.
+    *   **Salt**: Sử dụng Salt ngẫu nhiên (tối thiểu 128 bit theo SP 800-132) để kháng tấn công Rainbow Tables bằng cách tạo ra các hash space riêng biệt cho cùng một mật khẩu.
 
-## Chương 2: Quản lý Khóa & Key Establishment (Session 8)
-
-Đây là chỗ lấy điểm cao nhất về mặt bảo mật.
-
-1.  **Key Derivation Function - Hàm dẫn xuất khóa**:
-    *   Mật khẩu người dùng (Master Password) thường yếu, không thể dùng trực tiếp làm key AES 128-bit.
-    *   Giải pháp: Sử dụng thuật toán **PBKDF2-HMAC-SHA256** (Password-Based Key Derivation Function 2) để "stretching" (kéo dài) mật khẩu.
-    
-2.  **Tại sao lại là 390,000 Iterations?**
-    *   *Chém trong báo cáo*: "Nhóm đã tiến hành đo đạc thực nghiệm (file `benchmark.py`). Với 390.000 vòng lặp, thời gian delay là khoảng 50-70ms, hoàn toàn thân thiện với trải nghiệm người dùng (UX) nhưng đủ lớn để ngăn chặn tấn công Bruteforce/Dictionary Attack bằng phần cứng máy tính thông thường."
-
-3.  **Unique Salt (Session 7 & Khắc phục lỗi nhóm khác)**:
-    *   "Nhóm nhận thấy dùng tên vault làm Salt là lỗi bảo mật (Deterministic). Do đó, nhóm áp dụng **Random Salt (Sinh 16 bytes ngẫu nhiên bằng CSPRNG - `secrets.token_bytes`)** cho mỗi File Vault."
-    *   Ý nghĩa: Hai user đặt 2 vault tên giống nhau, mật khẩu giống nhau, vẫn sinh ra Ciphertext hoàn toàn khác nhau. Chống lại tấn công Rainbow Table đa mục tiêu.
-
-## Chương 3: Phân tích An toàn (Security Analysis)
-
-Tổng kết lại các Vectors tấn công và cách chặn:
-
-| Tấn công | Giải pháp từ hệ thống | So sánh với Slide |
-| :--- | :--- | :--- |
-| **Bruteforce Master Mật khẩu** | Dùng PBKDF2 với 390,000 iterations kéo dài thời gian bruteforce lên hàng trăm năm. | Session 8 |
-| **Dictionary / Rainbow Table** | Mỗi kho lưu trữ (Vault) sinh 16-byte random salt riêng biệt, khóa các tấn công bằng bảng tính sẵn. | Session 7 |
-| **Substitution / Sắp xếp lại Block** | AES chạy ở mode CBC thay vì ECB rò rỉ mẫu dữ liệu tĩnh. | Session 4 |
-| **Man-in-the-disk (Sửa file mã hóa)** | Khóa bằng mã HMAC-SHA256, tự động Checksum khi load file. | Session 8 |
+### 2.3. Authenticated Encryption (Mã hóa xác thực)
+*   **Tính toàn vẹn (Integrity)**: Thuật toán HMAC-SHA256 dựa trên tiêu chuẩn **FIPS 198-1** [1].
+*   **Generic Composition Paradigm**: Phân tích 3 mô hình từ nghiên cứu của **Bellare & Namprempre (2000)** [6] và **Hugo Krawczyk (2001)** [7]:
+    *   *Encrypt-and-MAC (E&M)*: Dùng trong SSH.
+    *   *MAC-then-Encrypt (MtE)*: Dùng trong SSL/TLS.
+    *   *Encrypt-then-MAC (EtM)*: Dùng trong IPsec.
+*   **Lựa chọn EtM**: Chứng minh tại sao EtM là mô hình duy nhất đạt được tính an toàn cao nhất (**INT-CTXT** - Integrity of Ciphertexts) và kháng được các cuộc tấn công như Padding Oracle, thay vì MtE (mô hình của SSL) vốn đã bị chứng minh là yếu hơn về mặt lý thuyết bởi Krawczyk.
 
 ---
+## Danh mục Tài liệu Tham khảo (Citations)
+[1] NIST (2008). *FIPS 198-1: The Keyed-Hash Message Authentication Code (HMAC)*.
+[2] NIST (2001). *FIPS 197: Advanced Encryption Standard (AES)*.
+[3] NIST (2001). *SP 800-38A: Recommendation for Block Cipher Modes of Operation*.
+[4] NIST (2010). *SP 800-132: Recommendation for Password-Based Key Derivation*.
+[5] IETF (2000). *RFC 2898: PKCS #5: Password-Based Cryptography Specification Version 2.0*.
+[6] M. Bellare & C. Namprempre (2000/2007). *Authenticated Encryption: Relations among notions and analysis of the generic composition paradigm*.
+[7] Hugo Krawczyk (2001). *The Order of Encryption and Authentication for Protecting Communications (Or: How Secure is SSL?)*.
 
-### Tổng kết
-Như vậy, Contribution của nhóm không phải là "tự học lại toán mã hóa", mà là **"Audit và thiết kế một giải pháp ứng dụng học thuật (PBKDF2 + AES-CBC + HMAC) vào thực tiễn kết hợp với đánh giá thực nghiệm (Benchmarking)."** 
-Đây là một Approach cực kỳ chuẩn kỹ sư.
+## Chương 3: Methodology (Kiến trúc Mật mã & Triển khai)
+*Chương này mô tả cách bạn áp dụng lý thuyết ở Chương 2 vào luồng hoạt động của ứng dụng. Tuyệt đối không nhúng code structure (file/folder) vào đây.*
+*   **3.1. Cryptographic Pipeline (Luồng Mật mã học)**:
+    *   Sơ đồ tổng quan (Flowchart) quá trình từ Master Password -> PBKDF2 -> Tách khóa (AES Key & HMAC Key).
+        *Gợi ý: Chèn hình `figure/figure_1a_encryption_flow.png` và `figure/figure_1b_decryption_flow.png` vào đây để minh họa.*
+    *   **Biện minh thiết kế**: Giải thích tại sao việc tách khóa (Key Splitting) là cần thiết để đảm bảo tính độc lập giữa mã hóa và xác thực theo khuyến nghị của **Bellare & Namprempre** [6].
+    *   Quá trình mã hóa (Encryption phase): Sinh IV ngẫu nhiên, padding, AES-CBC.
+    *   Quá trình xác thực (Authentication phase): Sinh MAC tag từ Ciphertext và IV (Mô hình EtM).
+*   **3.2. Vault Data Structure (Cấu trúc dữ liệu mã hóa)**:
+    *   Định dạng file nhị phân đầu ra: `[16-byte Salt] + [16-byte IV] + [32-byte MAC] + [Ciphertext]`.
+        *Gợi ý: Chèn hình `figure/figure_2_file_format.png` vào phần này để minh họa trực quan cấu trúc file.*
+    *   **Tuân thủ tiêu chuẩn**: Cấu trúc này tuân thủ **NIST SP 800-132 (Section 5.4 - Option 2)** [4] về việc lưu trữ các tham số dẫn xuất khóa (Salt) và dữ liệu bảo vệ (IV, MAC) cùng với bản mã.
+    *   Quy trình nạp thẻ và giải mã an toàn (Xác thực MAC trước khi giải mã để tránh rò rỉ thông tin qua lỗi giải mã).
+
+## Chương 4: Results, Benchmarks & Security Analysis (Đánh giá và Phân tích an toàn)
+*   **4.1. KDF Benchmarking**:
+    *   Đo đạc thời gian trễ của PBKDF2 với các giá trị iteration khác nhau.
+    *   Trình bày đồ thị Latency vs Iterations.
+    *   **Lý giải (Justification)**: Dựa trên khuyến nghị của **NIST SP 800-132 (Section 5.2)** [4], giải thích việc chọn số vòng lặp đủ lớn để tăng chi phí tấn công offline ròng (Work Factor) trong khi vẫn đảm bảo trải nghiệm người dùng (Latency < 1s).
+*   **4.2. Security Proofs / Attack Resistance (Phân tích Kháng tấn công)**:
+    *   *Brute-force Offline*: Hiệu quả bị triệt tiêu bởi cơ chế "key stretching" của PBKDF2 (**RFC 2898** [5]).
+    *   *Rainbow Table / Dictionary Attack*: Bị ngăn chặn hoàn toàn bởi Salt ngẫu nhiên (tối thiểu 128 bit theo **SP 800-132** [4]).
+    *   *Statistical Patterns*: Chặn bởi AES-CBC kết hợp Random IV. Tính chất khuếch tán (Cryptographic Diffusion) được chứng minh thông qua sự thay đổi hoàn toàn của bản mã dù bản tin gốc chỉ khác biệt 1 bit (**FIPS 197** [2]).
+        *Gợi ý: Chèn hình `figure/figure_5a_hex_map.png`, `figure/figure_5b_hex_map.png` và `figure/figure_6_statistical_diffusion.png` vào đây để chứng minh.*
+    *   *Data Tampering / Integrity Attacks*: Nhờ mô hình Encrypt-then-MAC, mọi nỗ lực sửa đổi dữ liệu trái phép đều bị phát hiện ở tầng HMAC mà không cần giải mã. Đây là ưu thế vượt trội về mặt lý thuyết so với các lỗi bảo mật của SSL/TLS khi sử dụng MtE (**Hugo Krawczyk** [7]).
+
+## Chương 5: Conclusion (Kết luận)
+*   Tóm tắt những giá trị thực tiễn hệ thống đạt được (áp dụng thành công các nguyên thủy mật mã cơ bản để xây dựng hệ thống an toàn).
+*   Những hướng phát triển (VD: Đổi sang Argon2id kháng GPU, thêm mã hóa bảo vệ bộ nhớ RAM).
+
+---
+**Lưu ý quan trọng cho nhóm viết báo cáo**:
+1. KHÔNG dán cấu trúc thư mục (`tree /src`) vào báo cáo.
+2. KHÔNG dán code thuần Python vào. Nếu cần mô tả thuật toán, hãy dùng **Mã giả (Pseudocode)** hoặc trình bày bằng các phương trình toán học/sơ đồ khối.
+3. Mọi công cụ, tham số (như AES-128, SHA-256) phải có lý do (Justification) rõ ràng dưa trên kiến thức đã học.

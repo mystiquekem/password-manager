@@ -1,0 +1,41 @@
+direction: down
+
+classes: {
+  salt: { style: { fill: "#E8F5E9"; stroke: "#4CAF50"; font-size: 24 } }
+  iv: { style: { fill: "#E3F2FD"; stroke: "#2196F3"; font-size: 24 } }
+  mac: { style: { fill: "#FFF3E0"; stroke: "#FF9800"; font-size: 24 } }
+  cipher: { style: { fill: "#FFEBEE"; stroke: "#F44336"; font-size: 24 } }
+  label: { style: { stroke-dash: 3; font-size: 32 } }
+}
+
+HexMapV2: "Hex Dump Map (vault2.enc)" {
+  style: { fill: "#f8f9fa"; font-size: 36 }
+  
+  S: {
+      row: "00000000  BE 78 24 E4 E7 1A 28 2C 15 9A DA 55 AE BC C3 29" { class: salt }
+      tag: "Unique Salt (16B)" { class: label }
+      row -> tag { style.stroke: transparent }
+  }
+
+  I: {
+      row: "00000010  C9 A8 D1 BA DD 4D 51 D8 08 6C 47 D9 51 53 54 8C" { class: iv }
+      tag: "Unique IV (16B)" { class: label }
+      row -> tag { style.stroke: transparent }
+  }
+
+  M: {
+      row1: "00000020  51 4E 64 FC 38 96 A4 A3 B5 EC EB 8D 85 B3 D8 2D" { class: mac }
+      row2: "00000030  5C 86 01 15 97 f8 22 5C 04 18 C5 15 E8 D3 41 C6" { class: mac }
+      tag: "HMAC Tag (32B)" { class: label }
+      row1 -> row2 -> tag { style.stroke: transparent }
+  }
+
+  C: {
+      row1: "00000040  4B 35 4D AE DA 73 15 D6 CE F4 6B 4A CC 04 A3 AA" { class: cipher }
+      row2: "00000050  4C EF E9 41 CC 6B 2C B5 85 1B B4 C8 74 18 82 C5" { class: cipher }
+      tag: "Ciphertext" { class: label }
+      row1 -> row2 -> tag { style.stroke: transparent }
+  }
+
+  S -> I -> M -> C { style: { stroke: "#2196F3"; stroke-width: 4 } }
+}

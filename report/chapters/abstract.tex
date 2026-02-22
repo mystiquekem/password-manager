@@ -1,0 +1,8 @@
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+The proliferation of digital services has significantly intensified the requirement for robust credential management. However, modern software development often relies on opaque, "black-box" cryptographic libraries that obscure underlying security mechanisms. This project addresses this challenge by designing and implementing a secure password manager that prioritizes transparency through the explicit orchestration of cryptographic primitives. 
+
+Utilizing a "white-box" implementation strategy, the system construction eschews high-level abstractions in favor of manual configuration of the Advanced Encryption Standard (AES) in Cipher Block Chaining (CBC) mode, combined with the Password-Based Key Derivation Function 2 (PBKDF2-HMAC-SHA256). To ensure both confidentiality and integrity, the architecture adopts the Encrypt-then-MAC (EtM) paradigm using HMAC-SHA256, effectively neutralizing integrity-based exploits such as padding oracle attacks.
+
+Empirical evaluation demonstrates that the implementation achieves high security without compromising user experience. Security benchmarking indicates that a calibration of 390,000 PBKDF2 iterations results in a derivation latency of approximately 75.27 ms, providing a robust work factor against offline brute-force attempts. Furthermore, statistical analysis confirms near-ideal cryptographic properties, with a recorded avalanche effect of 50.10\% and a Shannon entropy of 6.4133 bits per byte, signifying that the encrypted data is statistically indistinguishable from uniform noise. This project serves as a comprehensive validation of applying theoretical cryptographic standards to construct resilient, high-assurance security architectures.

@@ -1,0 +1,37 @@
+\begin{thebibliography}{1}
+
+\bibitem{fips197}
+{National Institute of Standards and Technology}, ``Advanced encryption
+  standard (aes),'' Tech. Rep. FIPS PUB 197, U.S. Department of Commerce,
+  November 2001.
+
+\bibitem{nist80038a}
+M.~Dworkin, ``Recommendation for block cipher modes of operation: Methods and
+  techniques,'' Tech. Rep. SP 800-38A, National Institute of Standards and
+  Technology, December 2001.
+
+\bibitem{nist800132}
+M.~S. Turan, E.~Barker, W.~Burr, and L.~Chen, ``Recommendation for
+  password-based key derivation: Part 1: Storage applications,'' Tech. Rep. SP
+  800-132, National Institute of Standards and Technology, December 2010.
+
+\bibitem{rfc2898}
+B.~Kaliski, ``Pkcs \#5: Password-based cryptography specification version
+  2.0.'' RFC 2898, 2000.
+
+\bibitem{fips198_1}
+{National Institute of Standards and Technology}, ``The keyed-hash message
+  authentication code (hmac),'' Tech. Rep. FIPS PUB 198-1, U.S. Department of
+  Commerce, July 2008.
+
+\bibitem{bellare2000}
+M.~Bellare and C.~Namprempre, ``Authenticated encryption: Relations among
+  notions and analysis of the generic composition paradigm,'' in {\em Advances
+  in Cryptology --- ASIACRYPT 2000}, pp.~531--545, Springer, 2000.
+
+\bibitem{krawczyk2001}
+H.~Krawczyk, ``The order of encryption and authentication for protecting
+  communications (or: How secure is ssl?),'' in {\em Advances in Cryptology ---
+  CRYPTO 2001}, pp.~310--331, Springer, 2001.
+
+\end{thebibliography}

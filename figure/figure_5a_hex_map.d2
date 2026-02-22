@@ -1,0 +1,41 @@
+direction: down
+
+classes: {
+  salt: { style: { fill: "#E8F5E9"; stroke: "#4CAF50"; font-size: 24 } }
+  iv: { style: { fill: "#E3F2FD"; stroke: "#2196F3"; font-size: 24 } }
+  mac: { style: { fill: "#FFF3E0"; stroke: "#FF9800"; font-size: 24 } }
+  cipher: { style: { fill: "#FFEBEE"; stroke: "#F44336"; font-size: 24 } }
+  label: { style: { stroke-dash: 3; font-size: 32 } }
+}
+
+HexMap: "Hex Dump Map (vault1.enc)" {
+  style: { fill: "#f8f9fa"; font-size: 36 }
+  
+  S: {
+      row: "00000000  7F 59 DD E5 05 F1 FD B0 38 D9 31 95 A4 80 2F 64" { class: salt }
+      tag: "Random Salt (16B)" { class: label }
+      row -> tag { style.stroke: transparent }
+  }
+
+  I: {
+      row: "00000010  78 63 C1 D3 33 96 C6 95 EF 9F 98 ED 08 13 94 FB" { class: iv }
+      tag: "Random IV (16B)" { class: label }
+      row -> tag { style.stroke: transparent }
+  }
+
+  M: {
+      row1: "00000020  19 02 C0 EE 58 9A 18 71 34 CB 26 13 1D 57 B1 7B" { class: mac }
+      row2: "00000030  02 38 D9 0C C7 3A 2B 00 E5 7A 4F FF 20 62 46 3F" { class: mac }
+      tag: "HMAC-SHA256 (32B)" { class: label }
+      row1 -> row2 -> tag { style.stroke: transparent }
+  }
+
+  C: {
+      row1: "00000040  82 BC F1 91 0F 3D EE D0 28 97 95 B8 48 76 07 10" { class: cipher }
+      row2: "00000050  B1 50 F3 F2 12 16 E7 10 2B 62 06 14 17 15 20 83" { class: cipher }
+      tag: "Ciphertext (AES-CBC)" { class: label }
+      row1 -> row2 -> tag { style.stroke: transparent }
+  }
+
+  S -> I -> M -> C { style: { stroke: "#2196F3"; stroke-width: 4 } }
+}

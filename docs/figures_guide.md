@@ -52,6 +52,9 @@
 *   **Nội dung**: Chèn file ảnh `kdf_benchmark_results.png` đã được sinh ra bởi file `benchmark.py`.
 *   **Giải thích trong báo cáo**: Phân tích sự cân bằng giữa số vòng lặp PBKDF2 (Tính an toàn chống brute-force) và thời gian thực thi thuật toán (Trải nghiệm người dùng) $\rightarrow$ Chọn điểm $N=390.000$ (tốn ~75ms).
 
-### Figure 5: Hex Dump (Confusion & Diffusion)
+### Figure 5: Hex Dump Map (Confusion & Diffusion)
 *   **Cách làm**: Mở file `.enc` trong thư mục `vaults/` bằng lệnh `hexdump -C vaults/<tên file>.enc` hoặc màn hình Notepad++ dạng Hex. Chụp một bức ảnh mớ bòng bong đó.
-*   **Trình bày**: Cho thấy dù tạo 2 Vault có mật khẩu và nội dung y hệt nhau, file kết quả vẫn không thể đoán trước được nhờ sức mạnh của CSPRNG Salt và Random IV.
+*   **Trình bày**:
+    *   **Figure 5.A**: Hex dump của Vault 1.
+    *   **Figure 5.B**: Hex dump của Vault 2 (cho thấy dù mật khẩu và nội dung giống hệt Vault 1, bản mã vẫn khác hoàn toàn nhờ Random Salt và IV).
+*   **Figure 6**: Biểu đồ Diffusion thống kê (sinh ra từ `scripts/analytics.py`).

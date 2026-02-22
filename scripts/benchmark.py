@@ -56,9 +56,30 @@ def plot_results(iterations, times):
 if __name__ == "__main__":
     test_iterations = [1000, 10000, 100000, 400000, 1000000]
     print("Starting Modular Crypto Pipeline Benchmark...\n")
+    
+    # Warm-up run
+    print("Performing warm-up run...")
+    benchmark_kdf([1000], password="warmup")
+    print("Warm-up complete.\n")
+    
     times = benchmark_kdf(test_iterations)
     
     try:
         plot_results(test_iterations, times)
+        # Copy to figures directory automatically
+        import shutil
+        shutil.copy('kdf_benchmark_results.png', root_dir / 'figure' / 'kdf_benchmark_results.png')
+        print(f"Plot copied to {root_dir / 'figure' / 'kdf_benchmark_results.png'}")
+        
+        # Save results to JSON for the report
+        data_to_save = []
+        for i, t in zip(test_iterations, times):
+            data_to_save.append({"iterations": i, "time_ms": round(t, 2)})
+        
+        output_path = root_dir / 'docs' / 'benchmark_results.json'
+        with open(output_path, 'w') as f:
+            json.dump(data_to_save, f, indent=4)
+        print(f"Results saved to {output_path}")
+        
     except Exception as e:
-        print(f"\nPlotting failed: {e}")
+        print(f"\nPost-processing failed: {e}")

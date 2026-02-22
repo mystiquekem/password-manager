@@ -1,20 +1,38 @@
 \babel@toc {english}{}\relax 
-\contentsline {chapter}{\numberline {1}Introduction}{2}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Project Objectives}{2}{section.1.1}%
-\contentsline {chapter}{\numberline {2}System Architecture \& Code Structure}{3}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Project Directory Structure}{3}{section.2.1}%
-\contentsline {section}{\numberline {2.2}Cryptographic Pipeline}{3}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Encryption Pipeline}{3}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Vault File Specification}{3}{subsection.2.2.2}%
-\contentsline {chapter}{\numberline {3}Cryptographic Implementation}{6}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Key Derivation with PBKDF2}{6}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Encryption with AES-128-CBC}{6}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Authentication with HMAC-SHA256}{6}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Code Implementation}{6}{section.3.4}%
-\contentsline {chapter}{\numberline {4}Experimental Results}{7}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Security Analysis: Hex Dump Visualization}{7}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Proof of Diffusion}{7}{subsection.4.1.1}%
-\contentsline {section}{\numberline {4.2}Performance Benchmarks}{8}{section.4.2}%
-\contentsline {chapter}{\numberline {5}Conclusion}{9}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Summary of Achievements}{9}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Future Work}{9}{section.5.2}%
+\contentsline {chapter}{Abstract}{5}{chapter*.4}%
+\contentsline {chapter}{\numberline {1}Introduction}{6}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Context}{6}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Problem Statement}{6}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Objectives}{6}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Theoretical Background}{8}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Symmetric-key Encryption}{8}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}The Advanced Encryption Standard (AES)}{8}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Cipher Block Chaining (CBC) Mode}{8}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}Padding Mechanism}{8}{subsection.2.1.3}%
+\contentsline {section}{\numberline {2.2}Key Derivation Functions}{9}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}The Entropy Limitation of User Passwords}{9}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}The PBKDF2 Algorithm}{9}{subsection.2.2.2}%
+\contentsline {section}{\numberline {2.3}Authenticated Encryption}{9}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Data Integrity via HMAC}{9}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Analysis of Generic Composition Paradigms}{10}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Theoretical Superiority of Encrypt-then-MAC (EtM)}{10}{subsection.2.3.3}%
+\contentsline {chapter}{\numberline {3}Methodology}{11}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Cryptographic Pipeline}{11}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}System Flow Overview}{11}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Design Justification: Cryptographic Key Splitting}{13}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}Encryption Phase}{14}{subsection.3.1.3}%
+\contentsline {subsection}{\numberline {3.1.4}Authentication Phase}{14}{subsection.3.1.4}%
+\contentsline {section}{\numberline {3.2}Vault Data Structure}{14}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Binary Layout Formatting}{14}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Safe Decryption and Verification Process}{15}{subsection.3.2.2}%
+\contentsline {chapter}{\numberline {4}Results, Benchmarks, and Security Analysis}{16}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Implementation Performance and Benchmarking}{16}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Key Derivation Function (KDF) Latency}{16}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Systemic Efficiency}{17}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}Security Analysis and Attack Resistance}{17}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Quantitative Security Metrics}{17}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Resistance to Brute-Force and Dictionary Attacks}{18}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Statistical Diffusion Analysis}{18}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}Cryptographic Visualization via Hex Mapping}{18}{subsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.2.5}Integrity Protection and Resistance to Padding Oracle Attacks}{20}{subsection.4.2.5}%
+\contentsline {chapter}{\numberline {5}Conclusion}{21}{chapter.5}%

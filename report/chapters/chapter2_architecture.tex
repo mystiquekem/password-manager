@@ -3,23 +3,10 @@
 
 This chapter outlines the high-level architecture of the password manager and explains how the project is organized into modular components.
 
-\section{Project Directory Structure}
-The project follows a clean, modular structure where cryptographic logic is separated from business logic and user interface code.
 
-\begin{lstlisting}[language=bash]
-password-manager/
-|-- src/                # Source code
-|   |-- core/           # Business logic (Vault management)
-|   |-- crypto/         # Cryptographic primitives and ciphers
-|   \-- ui/             # GUI implementation (Tkinter/Custom)
-|-- scripts/            # Utility scripts (Benchmarks, Hex samples)
-|-- figure/             # Generated diagrams (PNG/SVG)
-|-- hex_samples/        # Binary samples for analysis
-\-- password-manager.py # Main entry point
-\end{lstlisting}
 
 \section{Cryptographic Pipeline}
-The system uses a robust cryptographic pipeline for both encryption and decryption. The core principle is the \textbf{Encrypt-then-MAC} construction.
+The system uses a robust cryptographic pipeline for both encryption and decryption. The core principle is the \textbf{Encrypt-then-MAC} construction, which has been proven to be generically secure for authenticated encryption \cite{bellare2000, krawczyk2001}.
 
 \subsection{Encryption Pipeline}
 As illustrated in Figure \ref{fig:enc_flow}, the process starts with a Master Password and a random Salt. These are fed into PBKDF2 to derive a Master Key, which is then split into an AES Key and an HMAC Key.

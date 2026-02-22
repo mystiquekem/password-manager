@@ -1,0 +1,53 @@
+\chapter{Theoretical Background}
+\label{ch:theory}
+
+This chapter establishes the fundamental cryptographic principles upon which the secure password manager is constructed. The theoretical framework presented herein is rigorously aligned with established international standards, specifically those promulgated by the National Institute of Standards and Technology (NIST) and the Internet Engineering Task Force (IETF).
+
+\section{Symmetric-key Encryption}
+\subsection{The Advanced Encryption Standard (AES)}
+At the core of the system's confidentiality mechanism is the Advanced Encryption Standard (AES), standardized by NIST in FIPS PUB 197 \cite{fips197}. AES, utilizing the Rijndael algorithm, operates on a Substitution-Permutation Network (SPN) structure. This architecture provides robust resistance against linear and differential cryptanalysis through iterated rounds of byte substitution, row shifting, column mixing, and round key addition, ensuring strong cryptographic diffusion and confusion.
+
+\subsection{Cipher Block Chaining (CBC) Mode}
+To encrypt data exceeding the standard 16-byte block size of AES, a mode of operation is required. The system implements Cipher Block Chaining (CBC) mode, as recommended in NIST SP 800-38A \cite{nist80038a}. In CBC mode, each plaintext block is XORed with the preceding ciphertext block prior to encryption. This chaining mechanism ensures that identical plaintext blocks produce divergent ciphertext blocks. Crucially, the process necessitates an Initialization Vector (IV), which must be unpredictable (random) for each encryption operation. The use of a random IV in CBC mode guarantees "semantic security" against chosen-plaintext attacks, effectively concealing repetitive data patterns.
+
+\subsection{Padding Mechanism}
+As block ciphers like AES require input data length to be a strict multiple of the block size, a padding scheme must be employed. The Public-Key Cryptography Standards (PKCS) \#7 scheme is utilized, ensuring that the plaintext consistently aligns with the 16-byte boundary prior to the AES-CBC encryption phase.
+
+\section{Key Derivation Functions}
+\subsection{The Entropy Limitation of User Passwords}
+Passwords generated and memorized by human users inherently exhibit relatively low Shannon entropy. Consequently, they are fundamentally inadequate for direct application as cryptographic keys, which require a uniform distribution over the key space to resist brute-force attacks. To bridge this gap, NIST Special Publication 800-132 \cite{nist800132} mandates the utilization of a Password-Based Key Derivation Function (PBKDF) to cryptographically transform a low-entropy password into a high-entropy bit string suitable for symmetric encryption.
+
+\subsection{The PBKDF2 Algorithm}
+This system implements the PBKDF2 algorithm as specified in the Public-Key Cryptography Standards (PKCS) \#5 v2.0 and subsequently published as RFC 2898 \cite{rfc2898}. PBKDF2 can be formally defined as a function mapping a password ($P$), a salt ($S$), an iteration count ($c$), and a desired key length ($dkLen$) to a derived key ($DK$):
+\begin{equation}
+    DK = PBKDF2(PRF, P, S, c, dkLen)
+\end{equation}
+Where $PRF$ denotes a pseudorandom function, typically a hash-based MAC. In this architecture, HMAC-SHA256 is selected as the optimal $PRF$. PBKDF2 introduces two pivotal cryptographic mechanisms to fortify the derived key:
+
+\begin{itemize}
+    \item \textbf{Iteration Count for Key Stretching:} By recursively applying the $PRF$ for $c$ iterations (e.g., $c = 390,000$), PBKDF2 forces an artificial computational delay. Let $U_1 = PRF(P, S \parallel INT(i))$ and $U_c = PRF(P, U_{c-1})$. The block $T_i$ is computed as the bitwise XOR of all $U$ values: $T_i = U_1 \oplus U_2 \oplus \dots \oplus U_c$. This "key stretching" technique exponentially amplifies the computational work factor required for an adversary to test a single password guess, thereby severely mitigating the threat of brute-force and offline dictionary attacks without perceptibly impacting legitimate user authentication times.
+    \item \textbf{Cryptographic Salt:} A cryptographically secure, uniformly random salt ($S$) of at least 128 bits is generated for each encryption instance. The salt acts as a unique non-secret parameter that fundamentally alters the input to the hash function. Mathematically, it guarantees that for any two identical passwords $P_1 = P_2$, if $S_1 \neq S_2$, then $DK_1 \neq DK_2$ with overwhelming probability. This mechanism completely neutralizes time-memory trade-off attacks, such as precomputed Rainbow Tables, by forcing the attacker to compute a distinct hash chain for every possible salt value.
+\end{itemize}
+
+\section{Authenticated Encryption}
+\subsection{Data Integrity via HMAC}
+While the AES algorithm in CBC mode guarantees data confidentiality, it provides negligible protection against active adversarial tampering. To ensure verifiable data integrity and authenticity, the system employs the Keyed-Hash Message Authentication Code (HMAC) utilizing the SHA-256 hash function. Standardized in FIPS 198-1 \cite{fips198_1}, HMAC is formally defined as:
+\begin{equation}
+    HMAC(K, m) = H((K \oplus opad) \parallel H((K \oplus ipad) \parallel m))
+\end{equation}
+Where $H$ is the underlying cryptographic hash function (SHA-256), $K$ is the secret authentication key derived securely via PBKDF2, $m$ is the message, and $ipad$ and $opad$ are fixed padding constants. This nested construction mathematically precludes length-extension attacks that vulnerability traditional $H(K \parallel m)$ MAC designs.
+
+\subsection{Analysis of Generic Composition Paradigms}
+Establishing an intuitively secure channel necessitates the amalgamation of a symmetric encryption scheme ($\mathcal{SE}$) and a MAC scheme ($\mathcal{MA}$). The seminal formalized analysis by Bellare and Namprempre \cite{bellare2000}, subsequently corroborated by Krawczyk \cite{krawczyk2001}, dissects three generic composition paradigms:
+\begin{enumerate}
+    \item \textit{Encrypt-and-MAC (E\&M)}: Compute $C = \mathcal{SE}_K(M)$ and $T = \mathcal{MA}_{K'}(M)$ independently. Transport $(C, T)$. Historically utilized in the SSH protocol.
+    \item \textit{MAC-then-Encrypt (MtE)}: Compute a tag on the plaintext $T = \mathcal{MA}_{K'}(M)$, then encrypt the concatenation $C = \mathcal{SE}_K(M \parallel T)$. Transport $C$. This paradigm was the foundation of SSL and early TLS specifications.
+    \item \textit{Encrypt-then-MAC (EtM)}: Encrypt the plaintext $C = \mathcal{SE}_K(M)$, then compute the tag over the resulting ciphertext $T = \mathcal{MA}_{K'}(C)$. Transport $(C, T)$. Adopted by IPsec.
+\end{enumerate}
+
+\subsection{Theoretical Superiority of Encrypt-then-MAC (EtM)}
+Rigorous cryptographic proofs establish that \textbf{Encrypt-then-MAC (EtM)} is the singular composition paradigm guaranteed to provide chosen-ciphertext attack (IND-CCA) security and Integrity of Ciphertexts (INT-CTXT), provided the underlying encryption is IND-CPA secure and the MAC is strongly unforgeable (SUF-CMA) \cite{bellare2000}.
+
+Conversely, the MtE paradigm—despite its intuitive appeal of authenticating only valid plaintexts—was definitively proven to be generically insecure by Krawczyk \cite{krawczyk2001}. When applied to block ciphers operating in CBC mode, MtE vulnerabilities invariably lead to devastating practical exploits, most notably the "padding oracle" attack (e.g., the Vaudenay attack). 
+
+By implementing the EtM architecture, this password manager inherently circumvents these systemic vulnerabilities. The cryptographic pipeline mandates that the HMAC tag is fully validated against the ciphertext and Initialization Vector \textit{before} any decryption routine is initiated. If the tag validation fails, the ciphertext is instantly discarded without processing, thereby mathematically denying the adversary any oracle access to the underlying decryption or padding mechanisms.

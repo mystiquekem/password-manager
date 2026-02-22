@@ -1,0 +1,22 @@
+[
+    {
+        "iterations": 1000,
+        "time_ms": 0.23
+    },
+    {
+        "iterations": 10000,
+        "time_ms": 2.02
+    },
+    {
+        "iterations": 100000,
+        "time_ms": 18.69
+    },
+    {
+        "iterations": 400000,
+        "time_ms": 75.27
+    },
+    {
+        "iterations": 1000000,
+        "time_ms": 186.25
+    }
+]

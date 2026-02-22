@@ -1,0 +1,14 @@
+\chapter{Introduction}
+\label{ch:intro}
+
+\section{Context}
+In the contemporary digital era, the proliferation of online services has unequivocally escalated the necessity for robust credential management. As individuals and organizations continually expand their digital footprints, the reliance on secure password managers has become a fundamental aspect of modern cybersecurity hygiene. Developing a comprehensive password manager serves as an archetypal paradigm for effectively bridging theoretical cryptographic concepts with practical information security applications.
+
+\section{Problem Statement}
+The pervasive risk of credential compromise stems largely from insecure storage mechanisms and flawed cryptographic implementations. A significant caveat in modern software development is the over-reliance on opaque, "black-box" cryptographic libraries. While these high-level abstractions offer convenience, they consistently obscure the underlying cryptographic mechanisms, thereby preventing developers from fully comprehending the nuances of data protection. To guarantee the robustness of a secure system, there is an imperative need to eschew these abstractions and instead implement and manage cryptographic primitives explicitly, facilitating exhaustive control and understanding of the encryption pipeline.
+
+\section{Objectives}
+\label{sec:objectives}
+This project aims to design and implement a secure password manager from the ground up, prioritizing transparency and rigorous adherence to cryptographic standards. The primary objective is the practical application of theoretical cryptography by manually orchestrating core cryptographic primitives, including the Advanced Encryption Standard (AES), Keyed-Hash Message Authentication Code (HMAC), and Password-Based Key Derivation Function 2 (PBKDF2), to construct a resilient local storage solution.
+
+Furthermore, the project emphasizes a "white-box" implementation strategy. By explicitly constructing the algorithmic workflow, the system ensures absolute visibility and granular control over every phase of data processing. This transparent approach enables comprehensive security and performance evaluations. The system's cryptographic resilience is subsequently benchmarked and computationally analyzed against established international standards, such as those promulgated by the National Institute of Standards and Technology (NIST) and Federal Information Processing Standards (FIPS). Ultimately, this endeavor aims to cultivate strict secure coding practices and foster a sophisticated methodology for designing high-assurance security architectures.

@@ -1,0 +1,122 @@
+direction: down
+
+# Colors and Styling
+classes: {
+  input: {
+    style: {
+      fill: "#E8F5E9"
+      stroke: "#4CAF50"
+      border-radius: 5
+    }
+  }
+  process: {
+    style: {
+      fill: "#E3F2FD"
+      stroke: "#2196F3"
+      border-radius: 5
+    }
+  }
+  output: {
+    style: {
+      fill: "#FFF3E0"
+      stroke: "#FF9800"
+      border-radius: 5
+    }
+  }
+  key: {
+    style: {
+      fill: "#FCE4EC"
+      stroke: "#E91E63"
+      border-radius: 5
+    }
+  }
+}
+
+# --- Phase 1: Key Derivation ---
+KeyDerivation: "Phase 1: Key Derivation (PBKDF2)" {
+  direction: right
+  style: {
+    stroke-dash: 3
+    fill: "#F5F5F5"
+  }
+  
+  Pass: "Master Password" { class: input }
+  Salt: "Random Salt (16B)" { class: input }
+  Algo: "PBKDF2-HMAC-SHA256\n(390k iterations)" { class: process }
+  MKey: "Master Key (32 bytes)" { class: key }
+  
+  Pass -> Algo
+  Salt -> Algo
+  Algo -> MKey
+}
+
+# --- Phase 2: Key Splitting ---
+KeySplitting: "Phase 2: Key Splitting" {
+  direction: right
+  style: {
+    stroke-dash: 3
+    fill: "#F5F5F5"
+  }
+  
+  MKey: "Master Key" { class: key; shape: person }
+  AESK: "AES Key (16B)" { class: key }
+  HMACK: "HMAC Key (16B)" { class: key }
+  
+  MKey -> AESK: "First 16B"
+  MKey -> HMACK: "Last 16B"
+}
+
+# --- Phase 3: Encryption & MAC (Encrypt-then-MAC) ---
+EncryptionFlow: "Phase 3: Encryption & Authentication" {
+  direction: down
+  style: {
+    stroke-dash: 3
+    fill: "#F5F5F5"
+  }
+
+  DataGroup: {
+    direction: right
+    Plain: "Plaintext (JSON)" { class: input }
+    Pad: "PKCS7 Padding" { class: process }
+    Plain -> Pad
+  }
+  
+  EncryptGroup: {
+    direction: right
+    IV: "IV (16B random)" { class: input }
+    AES: "AES-128-CBC" { class: process }
+    Cipher: "Ciphertext" { class: output }
+    
+    IV -> AES
+    AES -> Cipher
+  }
+  
+  MACGroup: {
+    direction: right
+    HMAC: "HMAC-SHA256" { class: process }
+    Tag: "MAC Tag (32B)" { class: output }
+    
+    HMAC -> Tag
+  }
+
+  DataGroup.Pad -> EncryptGroup.AES
+  EncryptGroup.Cipher -> MACGroup.HMAC
+}
+
+# --- Connection between Phases ---
+KeyDerivation.MKey -> KeySplitting.MKey
+KeySplitting.AESK -> EncryptionFlow.EncryptGroup.AES
+KeySplitting.HMACK -> EncryptionFlow.MACGroup.HMAC
+
+# --- Phase 4: Final Package ---
+Package: "Phase 4: Output File (.enc)" {
+  shape: cylinder
+  class: output
+  
+  Content: "[Salt] + [IV] + [MAC] + [Ciphertext]"
+}
+
+EncryptionFlow.MACGroup.Tag -> Package
+EncryptionFlow.EncryptGroup.Cipher -> Package
+KeyDerivation.Salt -> Package
+EncryptionFlow.EncryptGroup.IV -> Package
